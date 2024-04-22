@@ -1,5 +1,7 @@
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
+import { userRouter } from './app/modules/User/user.routes';
+
 const app: Application = express();
 
 app.use(cors());
@@ -10,5 +12,7 @@ app.get('/', (req: Request, res: Response) => {
 		message: 'Ph Health Care API is running!'
 	});
 });
+
+app.use('/api/v1/users', userRouter);
 
 export default app;
