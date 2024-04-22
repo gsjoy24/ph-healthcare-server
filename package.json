@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "migrate": "npx prisma migrate dev"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@prisma/client": "^5.12.1",
     "cors": "^2.8.5",
     "express": "^4.19.2"
   }
