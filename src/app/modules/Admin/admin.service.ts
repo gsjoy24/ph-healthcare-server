@@ -4,6 +4,10 @@ const prisma = new PrismaClient();
 
 const getAllAdmins = async (params: any, options: any) => {
 	const { searchTerm, ...restFilterData } = params;
+	const limit = options.limit ? parseInt(options.limit) : 2;
+	const page = options.page ? (parseInt(options.page) - 1) * limit : 0;
+	const sortBy = options.sortBy || 'createdAt';
+	const sortOrder = options.sortOrder || 'desc';
 
 	const conditions: Prisma.AdminWhereInput[] = [];
 
@@ -27,10 +31,26 @@ const getAllAdmins = async (params: any, options: any) => {
 
 	const result = await prisma.admin.findMany({
 		where: { AND: conditions },
-		skip: options.page ? (parseInt(options.page) - 1) * parseInt(options.limit) : 0,
-		take: options.limit ? parseInt(options.limit) : 2,
+		skip: page,
+		take: limit,
 		orderBy: {
-			[options.sortBy || 'createdAt']: options.sortOrder || 'desc'
+			[sortBy]: sortOrder
+		}
+	});
+	return {
+		meta: {
+			limit,
+			page,
+			total: result.length
+		},
+		data: result
+	};
+};
+
+const getAdminByIdFromDb = async (id: string) => {
+	const result = await prisma.admin.findUnique({
+		where: {
+			id: id
 		}
 	});
 	return result;
