@@ -57,6 +57,7 @@ const getAdminByIdFromDb = async (id: string) => {
 };
 
 const AdminServices = {
-	getAllAdmins
+	getAllAdmins,
+	getAdminByIdFromDb
 };
 export default AdminServices;
