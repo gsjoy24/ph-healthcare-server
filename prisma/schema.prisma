@@ -12,8 +12,8 @@ model User {
   email              String     @unique
   password           String
   role               userRole
-  needPasswordChange Boolean
-  status             userStatus
+  needPasswordChange Boolean    @default(true)
+  status             userStatus @default(ACTIVE)
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
   admin              Admin?
@@ -25,10 +25,13 @@ model Admin {
   id           String   @id @default(uuid())
   name         String
   email        String   @unique
-  user         User     @relation(fields: [email], references: [email])
-  profilePhoto String
+  phone        String
+  profilePhoto String?
+  isDeleted    Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [email], references: [email])
 
   @@map("admins")
 }
