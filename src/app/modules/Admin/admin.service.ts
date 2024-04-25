@@ -1,11 +1,13 @@
 import { Admin, Prisma, PrismaClient, userStatus } from '@prisma/client';
+import { IPaginationOptions } from '../../Types/pagination';
 import { adminSearchableFields } from './admin.constant';
+import { IAdminFilterRequest } from './admin.types';
 const prisma = new PrismaClient();
 
-const getAllAdmins = async (params: any, options: any) => {
+const getAllAdmins = async (params: IAdminFilterRequest, options: IPaginationOptions) => {
 	const { searchTerm, ...restFilterData } = params;
-	const limit = options.limit ? parseInt(options.limit) : 2;
-	const page = options.page ? (parseInt(options.page) - 1) * limit : 0;
+	const limit = options.limit ? Number(options.limit) : 2;
+	const page = options.page ? (Number(options.page) - 1) * limit : 0;
 	const sortBy = options.sortBy || 'createdAt';
 	const sortOrder = options.sortOrder || 'desc';
 
@@ -27,7 +29,7 @@ const getAllAdmins = async (params: any, options: any) => {
 		conditions.push({
 			AND: Object.keys(restFilterData).map((key) => ({
 				[key]: {
-					equals: restFilterData[key]
+					equals: (restFilterData as any)[key]
 				}
 			}))
 		});
