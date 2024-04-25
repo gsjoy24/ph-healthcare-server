@@ -41,6 +41,7 @@ const getAllAdmins = async (params: any, options: any) => {
 			[sortBy]: sortOrder
 		}
 	});
+	
 	return {
 		meta: {
 			limit,
@@ -65,7 +66,8 @@ const updateIntoDB = async (id: string, data: Partial<Admin>) => {
 	// this will throw an error if admin is not found
 	await prisma.admin.findUniqueOrThrow({
 		where: {
-			id: id
+			id: id,
+			isDeleted: false
 		}
 	});
 
