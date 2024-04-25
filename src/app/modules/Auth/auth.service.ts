@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
-
 import createToken from '../../../utils/createToken';
 import prisma from '../../../utils/prisma';
+
 const loginUser = async (email: string, password: string) => {
 	const userData = await prisma.user.findUniqueOrThrow({
 		where: {
@@ -28,8 +28,13 @@ const loginUser = async (email: string, password: string) => {
 	};
 };
 
+const createRefreshToken = async (token: string) => {
+	console.log(token);
+};
+
 const AuthServices = {
-	loginUser
+	loginUser,
+	createRefreshToken
 };
 
 export default AuthServices;
