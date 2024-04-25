@@ -5,4 +5,4 @@ const router = express.Router();
 
 router.post('/', userControllers.createAdmin);
 
-export const userRouter = router;
+export const userRoutes = router;

@@ -8,4 +8,4 @@ router.get('/:id', AdminControllers.getAdminById);
 router.patch('/:id', AdminControllers.updateAdmin);
 router.delete('/:id', AdminControllers.deleteFromDB);
 
-export const adminRouter = router;
+export const adminRoutes = router;
