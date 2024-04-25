@@ -41,7 +41,7 @@ const getAllAdmins = async (params: any, options: any) => {
 			[sortBy]: sortOrder
 		}
 	});
-	
+
 	return {
 		meta: {
 			limit,
