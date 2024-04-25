@@ -5,13 +5,24 @@ import sendResponse from '../../../utils/sendResponse';
 import AuthServices from './auth.service';
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
-	const result = await AuthServices.loginUser(req.body?.email, req.body?.password);
+	const { needPasswordChange, accessToken, refreshToken } = await AuthServices.loginUser(
+		req.body?.email,
+		req.body?.password
+	);
+
+	res.cookie('refreshToken', refreshToken, {
+		httpOnly: true,
+		secure: false
+	});
 
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
 		message: 'Login successful!',
-		data: result
+		data: {
+			needPasswordChange,
+			accessToken
+		}
 	});
 });
 
