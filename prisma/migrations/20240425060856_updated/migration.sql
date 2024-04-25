@@ -2,7 +2,7 @@
 CREATE TYPE "userRole" AS ENUM ('SUPERADMIN', 'ADMIN', 'DOCTOR', 'PATIENT');
 
 -- CreateEnum
-CREATE TYPE "userStatus" AS ENUM ('ACTIVE', 'BLOCKED');
+CREATE TYPE "userStatus" AS ENUM ('ACTIVE', 'BLOCKED', 'DELETED');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -10,8 +10,8 @@ CREATE TABLE "users" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" "userRole" NOT NULL,
-    "needPasswordChange" BOOLEAN NOT NULL,
-    "status" "userStatus" NOT NULL,
+    "needPasswordChange" BOOLEAN NOT NULL DEFAULT true,
+    "status" "userStatus" NOT NULL DEFAULT 'ACTIVE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -23,7 +23,9 @@ CREATE TABLE "admins" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "profilePhoto" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
+    "profilePhoto" TEXT,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

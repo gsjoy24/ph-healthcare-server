@@ -1,4 +1,4 @@
-import { Admin, Prisma, PrismaClient } from '@prisma/client';
+import { Admin, Prisma, PrismaClient, userStatus } from '@prisma/client';
 import { adminSearchableFields } from './admin.constant';
 const prisma = new PrismaClient();
 
@@ -9,7 +9,11 @@ const getAllAdmins = async (params: any, options: any) => {
 	const sortBy = options.sortBy || 'createdAt';
 	const sortOrder = options.sortOrder || 'desc';
 
-	const conditions: Prisma.AdminWhereInput[] = [];
+	const conditions: Prisma.AdminWhereInput[] = [
+		{
+			isDeleted: false
+		}
+	];
 
 	if (searchTerm) {
 		conditions.push({
@@ -48,15 +52,23 @@ const getAllAdmins = async (params: any, options: any) => {
 };
 
 const getAdminByIdFromDb = async (id: string) => {
-	const result = await prisma.admin.findUnique({
+	const result = await prisma.admin.findUniqueOrThrow({
 		where: {
-			id: id
+			id: id,
+			isDeleted: false
 		}
 	});
 	return result;
 };
 
 const updateIntoDB = async (id: string, data: Partial<Admin>) => {
+	// this will throw an error if admin is not found
+	await prisma.admin.findUniqueOrThrow({
+		where: {
+			id: id
+		}
+	});
+
 	const result = await prisma.admin.update({
 		where: {
 			id: id
@@ -66,9 +78,42 @@ const updateIntoDB = async (id: string, data: Partial<Admin>) => {
 	return result;
 };
 
+const deleteFromDB = async (id: string) => {
+	await prisma.admin.findUniqueOrThrow({
+		where: {
+			id: id
+		}
+	});
+
+	const result = await prisma.$transaction(async (tx) => {
+		const deletedAdmin = await tx.admin.update({
+			where: {
+				id: id
+			},
+			data: {
+				isDeleted: true
+			}
+		});
+
+		const deletedUser = await tx.user.update({
+			where: {
+				email: deletedAdmin.email
+			},
+			data: {
+				status: userStatus.DELETED
+			}
+		});
+
+		return deletedAdmin;
+	});
+
+	return result;
+};
+
 const AdminServices = {
 	getAllAdmins,
 	getAdminByIdFromDb,
-	updateIntoDB
+	updateIntoDB,
+	deleteFromDB
 };
 export default AdminServices;
