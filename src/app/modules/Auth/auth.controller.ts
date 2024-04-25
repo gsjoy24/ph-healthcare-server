@@ -26,20 +26,29 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
-const createRefreshToken = catchAsync(async (req: Request, res: Response) => {
-	const refreshToken = req.cookies.refreshToken;
-	const token = await AuthServices.createRefreshToken(refreshToken);
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+	const OldRefreshToken = req.cookies.refreshToken;
+	const { accessToken, needPasswordChange, refreshToken } = await AuthServices.refreshToken(OldRefreshToken);
+
+	res.cookie('refreshToken', refreshToken, {
+		httpOnly: true,
+		secure: false
+	});
 
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Refresh token created successfully'
+		message: 'Refresh token created successfully',
+		data: {
+			accessToken,
+			needPasswordChange
+		}
 	});
 });
 
 const AuthControllers = {
 	loginUser,
-	createRefreshToken
+	refreshToken
 };
 
 export default AuthControllers;
