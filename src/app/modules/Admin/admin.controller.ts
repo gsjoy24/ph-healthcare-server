@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import pick from '../../../utils/pick';
 import sendResponse from '../../../utils/sendResponse';
 import { adminFilterAbleFields } from './admin.constant';
 import AdminServices from './admin.service';
 
-const getAllAdmins = async (req: Request, res: Response) => {
+const getAllAdmins = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const params = pick(req.query, adminFilterAbleFields);
 		const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
@@ -18,14 +18,11 @@ const getAllAdmins = async (req: Request, res: Response) => {
 			data: result?.data
 		});
 	} catch (error: any) {
-		res.status(httpStatus.NOT_FOUND).json({
-			success: false,
-			message: error?.name || 'Something went wrong while fetching admins'
-		});
+		next(error);
 	}
 };
 
-const getAdminById = async (req: Request, res: Response) => {
+const getAdminById = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const { id } = req.params;
 		const result = await AdminServices.getAdminByIdFromDb(id);
@@ -37,14 +34,11 @@ const getAdminById = async (req: Request, res: Response) => {
 			data: result
 		});
 	} catch (error: any) {
-		res.status(httpStatus.NOT_FOUND).json({
-			success: false,
-			message: error?.name || 'Something went wrong while fetching admin'
-		});
+		next(error);
 	}
 };
 
-const updateAdmin = async (req: Request, res: Response) => {
+const updateAdmin = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const { id } = req.params;
 		const data = req.body;
@@ -56,15 +50,11 @@ const updateAdmin = async (req: Request, res: Response) => {
 			data: result
 		});
 	} catch (error: any) {
-		res.status(httpStatus.NOT_FOUND).json({
-			success: false,
-			message: error?.name || 'Something went wrong while updating admin',
-			errors: error
-		});
+		next(error);
 	}
 };
 
-const deleteFromDB = async (req: Request, res: Response) => {
+const deleteFromDB = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const { id } = req.params;
 		await AdminServices.deleteFromDB(id);
@@ -74,10 +64,7 @@ const deleteFromDB = async (req: Request, res: Response) => {
 			message: 'Admin deleted successfully'
 		});
 	} catch (error: any) {
-		res.status(httpStatus.NOT_FOUND).json({
-			success: false,
-			message: error?.name || 'Something went wrong while deleting admin'
-		});
+		next(error);
 	}
 };
 
