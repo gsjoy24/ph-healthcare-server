@@ -1,8 +1,8 @@
 import { Admin, Prisma, PrismaClient, userStatus } from '@prisma/client';
+import prisma from '../../../utils/prisma';
 import { IPaginationOptions } from '../../Types/pagination';
 import { adminSearchableFields } from './admin.constant';
 import { IAdminFilterRequest } from './admin.types';
-const prisma = new PrismaClient();
 
 const getAllAdmins = async (params: IAdminFilterRequest, options: IPaginationOptions) => {
 	const { searchTerm, ...restFilterData } = params;
