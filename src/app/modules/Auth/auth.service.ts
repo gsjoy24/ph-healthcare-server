@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import createToken from '../../../utils/createToken';
 import prisma from '../../../utils/prisma';
+import verifyToken from '../../../utils/verifyToken';
 import config from '../../config';
 
 const loginUser = async (email: string, password: string) => {
@@ -31,12 +31,8 @@ const loginUser = async (email: string, password: string) => {
 };
 
 const refreshToken = async (token: string) => {
-	let decodedData;
-	try {
-		decodedData = jwt.verify(token, config.refreshSecret as string);
-	} catch (error) {
-		throw new Error('You are not authorized!');
-	}
+	const decodedData = verifyToken(token, config.refreshSecret as string);
+
 	const isUserExists = await prisma.user.findUniqueOrThrow({
 		where: {
 			email: decodedData?.email
