@@ -1,3 +1,4 @@
+import { userStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import createToken from '../../../utils/createToken';
 import prisma from '../../../utils/prisma';
@@ -7,7 +8,8 @@ import config from '../../config';
 const loginUser = async (email: string, password: string) => {
 	const userData = await prisma.user.findUniqueOrThrow({
 		where: {
-			email
+			email,
+			status: userStatus.ACTIVE
 		}
 	});
 
@@ -35,7 +37,8 @@ const refreshToken = async (token: string) => {
 
 	const isUserExists = await prisma.user.findUniqueOrThrow({
 		where: {
-			email: decodedData?.email
+			email: decodedData?.email,
+			status: userStatus.ACTIVE
 		}
 	});
 
