@@ -179,11 +179,40 @@ const forgotPassword = async (email: string) => {
 	return;
 };
 
+const resetPassword = async (id: string, token: string, password: string) => {
+	const verifiedData = verifyToken(token, config.reset_pass_secret as string);
+	const userData = await prisma.user.findUniqueOrThrow({
+		where: {
+			id,
+			email: verifiedData?.email,
+			status: userStatus.ACTIVE
+		}
+	});
+
+	const hashedPassword = await bcrypt.hash(password, config.pass_salt);
+
+	const result = await prisma.user.update({
+		where: {
+			id: userData.id,
+			email: userData.email,
+			status: userStatus.ACTIVE
+		},
+		data: {
+			password: hashedPassword,
+			needPasswordChange: false
+		}
+	});
+	console.log(result);
+
+	return;
+};
+
 const AuthServices = {
 	loginUser,
 	refreshToken,
 	changePassword,
-	forgotPassword
+	forgotPassword,
+	resetPassword
 };
 
 export default AuthServices;
