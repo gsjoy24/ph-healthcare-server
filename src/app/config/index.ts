@@ -1,13 +1,13 @@
-const accessSecret = process.env.JWT_ACCESS_SECRET;
-const refreshSecret = process.env.JWT_REFRESH_SECRET;
-const accessSecretExp = process.env.JWT_ACCESS_SECRET_EXPIRATION;
-const refreshSecretExp = process.env.JWT_REFRESH_EXPIRATION;
+import dotenv from 'dotenv';
+import path from 'path';
 
-const config = {
-	accessSecret,
-	refreshSecret,
-	accessSecretExp,
-	refreshSecretExp
+dotenv.config({ path: path.join(process.cwd(), '/.env') });
+
+export default {
+	port: process.env.PORT,
+	env: process.env.NODE_ENV,
+	accessSecret: process.env.JWT_ACCESS_SECRET,
+	refreshSecret: process.env.JWT_REFRESH_SECRET,
+	accessSecretExp: process.env.JWT_ACCESS_SECRET_EXPIRATION,
+	refreshSecretExp: process.env.JWT_REFRESH_EXPIRATION
 };
-
-export default config;
