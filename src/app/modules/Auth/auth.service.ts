@@ -2,6 +2,7 @@ import { userStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import createToken from '../../../utils/createToken';
+import emailSender from '../../../utils/emailSender';
 import prisma from '../../../utils/prisma';
 import verifyToken from '../../../utils/verifyToken';
 import config from '../../config';
@@ -106,7 +107,76 @@ const forgotPassword = async (email: string) => {
 
 	const resetPassLink = config.base_app_url + `/reset-password?id=${userData.id}&token=${resetToken}`;
 	console.log(resetPassLink);
+	const emailTemp = `
+	<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
+        .email-container {
+            background-color: #ffffff;
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #007bff;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #333333;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <h1>Password Reset</h1>
+        <p>You've requested to reset your password. Click the button below to reset it:</p>
+        <a class="btn" href="${resetPassLink}">Reset Password</a>
+        <p>If you didn't request a password reset, you can safely ignore this email.</p>
+    </div>
+</body>
+</html>
+`;
+	await emailSender(email, emailTemp);
+	return;
 };
 
 const AuthServices = {

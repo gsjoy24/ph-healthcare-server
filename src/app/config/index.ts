@@ -13,5 +13,7 @@ export default {
 	refreshSecretExp: process.env.JWT_REFRESH_EXPIRATION,
 	reset_pass_secret: process.env.RESET_PASS_SECRET,
 	reset_pass_secret_exp: process.env.RESET_PASS_SECRET_EXPIRATION,
-	base_app_url: process.env.BASE_APP_URL
+	base_app_url: process.env.BASE_APP_URL,
+	app_email: process.env.APP_EMAIL,
+	app_password: process.env.APP_PASSWORD
 };
