@@ -181,6 +181,10 @@ const forgotPassword = async (email: string) => {
 
 const resetPassword = async (id: string, token: string, password: string) => {
 	const verifiedData = verifyToken(token, config.reset_pass_secret as string);
+
+	if (verifiedData?.id !== id) {
+		throw new apiError(httpStatus.UNAUTHORIZED, 'Invalid token');
+	}
 	const userData = await prisma.user.findUniqueOrThrow({
 		where: {
 			id,
