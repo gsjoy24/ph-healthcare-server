@@ -1,9 +1,11 @@
 import { userStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import httpStatus from 'http-status';
 import createToken from '../../../utils/createToken';
 import prisma from '../../../utils/prisma';
 import verifyToken from '../../../utils/verifyToken';
 import config from '../../config';
+import apiError from '../../errors/apiError';
 
 const loginUser = async (email: string, password: string) => {
 	const userData = await prisma.user.findUniqueOrThrow({
@@ -57,9 +59,39 @@ const refreshToken = async (token: string) => {
 	};
 };
 
+const changePassword = async (user: any, payload: any) => {
+	const userData = await prisma.user.findUniqueOrThrow({
+		where: {
+			id: user.id,
+			email: user.email
+		}
+	});
+	const isPasswordValid = await bcrypt.compare(payload.oldPassword, userData.password);
+
+	if (!isPasswordValid) {
+		throw new apiError(httpStatus.UNAUTHORIZED, 'Invalid email or password');
+	}
+
+	const hashedPassword = await bcrypt.hash(payload.newPassword, Number(config.pass_salt));
+
+	await prisma.user.update({
+		where: {
+			id: userData.id,
+			email: userData.email
+		},
+		data: {
+			password: hashedPassword,
+			needPasswordChange: false
+		}
+	});
+
+	return;
+};
+
 const AuthServices = {
 	loginUser,
-	refreshToken
+	refreshToken,
+	changePassword
 };
 
 export default AuthServices;

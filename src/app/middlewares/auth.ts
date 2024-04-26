@@ -12,11 +12,12 @@ const auth =
 			if (!token) {
 				throw new apiError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
 			}
-			const verifiedToken = verifyToken(token, config.accessSecret as string);
+			const verifiedUser = verifyToken(token, config.accessSecret as string);
 
-			if (roles.length && !roles.includes(verifiedToken.role)) {
+			if (roles.length && !roles.includes(verifiedUser.role)) {
 				throw new apiError(httpStatus.FORBIDDEN, 'You are not authorized!');
 			}
+			req.user = verifiedUser;
 			next();
 		} catch (error) {
 			next(error);
