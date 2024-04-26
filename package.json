@@ -32,6 +32,7 @@
     "express": "^4.19.2",
     "http-status": "^1.7.4",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.13",
     "zod": "^3.23.4"
   }
 }
