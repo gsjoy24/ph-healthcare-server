@@ -5,7 +5,7 @@ const catchAsync = (fn: Function) => {
 		try {
 			await fn(req, res, next);
 		} catch (error) {
-			next();
+			next(error);
 		}
 	};
 };
