@@ -1,4 +1,4 @@
-import { userRole } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import express from 'express';
 import auth from '../../middlewares/auth';
 import AuthControllers from './auth.controller';
@@ -8,7 +8,7 @@ router.post('/login', AuthControllers.loginUser);
 router.post('/refresh-token', AuthControllers.refreshToken);
 router.post(
 	'/change-password',
-	auth(userRole.ADMIN, userRole.DOCTOR, userRole.PATIENT, userRole.SUPER_ADMIN),
+	auth(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT, UserRole.SUPER_ADMIN),
 	AuthControllers.changePassword
 );
 router.post('/forgot-password', AuthControllers.forgotPassword);

@@ -1,4 +1,4 @@
-import { PrismaClient, userRole } from '@prisma/client';
+import { PrismaClient, UserRole } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import fileUploader from '../../../utils/fileUploader';
 import config from '../../config';
@@ -14,7 +14,7 @@ const createAdmin = async (payload: Record<string, any>) => {
 	const userData = {
 		email: payload.body?.admin?.email,
 		password: hashedPassword,
-		role: userRole.ADMIN
+		role: UserRole.ADMIN
 	};
 	const result = await prisma.$transaction(async (tx) => {
 		const user = await tx.user.create({ data: userData });

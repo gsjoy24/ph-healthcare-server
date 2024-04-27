@@ -1,4 +1,4 @@
-import { userStatus } from '@prisma/client';
+import { UserStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import createToken from '../../../utils/createToken';
@@ -12,7 +12,7 @@ const loginUser = async (email: string, password: string) => {
 	const userData = await prisma.user.findUniqueOrThrow({
 		where: {
 			email,
-			status: userStatus.ACTIVE
+			status: UserStatus.ACTIVE
 		}
 	});
 
@@ -41,7 +41,7 @@ const refreshToken = async (token: string) => {
 	const isUserExists = await prisma.user.findUniqueOrThrow({
 		where: {
 			email: decodedData?.email,
-			status: userStatus.ACTIVE
+			status: UserStatus.ACTIVE
 		}
 	});
 
@@ -65,7 +65,7 @@ const changePassword = async (user: any, payload: any) => {
 		where: {
 			id: user.id,
 			email: user.email,
-			status: userStatus.ACTIVE
+			status: UserStatus.ACTIVE
 		}
 	});
 	const isPasswordValid = await bcrypt.compare(payload.oldPassword, userData.password);
@@ -80,7 +80,7 @@ const changePassword = async (user: any, payload: any) => {
 		where: {
 			id: userData.id,
 			email: userData.email,
-			status: userStatus.ACTIVE
+			status: UserStatus.ACTIVE
 		},
 		data: {
 			password: hashedPassword,
@@ -95,7 +95,7 @@ const forgotPassword = async (email: string) => {
 	const userData = await prisma.user.findUniqueOrThrow({
 		where: {
 			email,
-			status: userStatus.ACTIVE
+			status: UserStatus.ACTIVE
 		}
 	});
 	const tokenData = {
@@ -189,7 +189,7 @@ const resetPassword = async (id: string, token: string, password: string) => {
 		where: {
 			id,
 			email: verifiedData?.email,
-			status: userStatus.ACTIVE
+			status: UserStatus.ACTIVE
 		}
 	});
 
@@ -199,7 +199,7 @@ const resetPassword = async (id: string, token: string, password: string) => {
 		where: {
 			id: userData.id,
 			email: userData.email,
-			status: userStatus.ACTIVE
+			status: UserStatus.ACTIVE
 		},
 		data: {
 			password: hashedPassword,

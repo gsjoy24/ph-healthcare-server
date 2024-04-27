@@ -1,6 +1,6 @@
-import { Admin, Prisma, PrismaClient, userStatus } from '@prisma/client';
+import { Admin, Prisma, PrismaClient, UserStatus } from '@prisma/client';
 import prisma from '../../../utils/prisma';
-import { IPaginationOptions } from '../../Types/pagination';
+import { IPaginationOptions } from '../../types/pagination';
 import { adminSearchableFields } from './admin.constant';
 import { IAdminFilterRequest } from './admin.types';
 
@@ -104,7 +104,7 @@ const deleteFromDB = async (id: string) => {
 				email: deletedAdmin.email
 			},
 			data: {
-				status: userStatus.DELETED
+				status: UserStatus.DELETED
 			}
 		});
 

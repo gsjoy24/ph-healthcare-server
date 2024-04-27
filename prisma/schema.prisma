@@ -11,12 +11,13 @@ model User {
   id                 String     @id @default(uuid())
   email              String     @unique
   password           String
-  role               userRole
+  role               UserRole
   needPasswordChange Boolean    @default(true)
-  status             userStatus @default(ACTIVE)
+  status             UserStatus @default(ACTIVE)
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
   admin              Admin?
+  doctor             Doctor?
 
   @@map("users")
 }
@@ -36,15 +37,42 @@ model Admin {
   @@map("admins")
 }
 
-enum userRole {
+model Doctor {
+  id                 String  @id @default(uuid())
+  name               String
+  email              String  @unique
+  phone              String
+  profilePhoto       String?
+  address            String?
+  registrationNumber String
+  experience         Int     @default(0)
+  gender             Gender
+  appointmentFee     Int
+  qualification      String
+  currentWorkplace   String
+  designation        String
+  isDeleted          Boolean @default(false)
+
+  user User @relation(fields: [email], references: [email])
+
+  @@map("doctors")
+}
+
+enum UserRole {
   SUPER_ADMIN
   ADMIN
   DOCTOR
   PATIENT
 }
 
-enum userStatus {
+enum UserStatus {
   ACTIVE
   BLOCKED
   DELETED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
 }

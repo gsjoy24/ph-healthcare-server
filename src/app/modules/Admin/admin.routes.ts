@@ -1,4 +1,4 @@
-import { userRole } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import express from 'express';
 import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
@@ -7,14 +7,14 @@ import adminValidations from './admin.validations';
 
 const router = express.Router();
 
-router.get('/', auth(userRole.SUPER_ADMIN, userRole.ADMIN), AdminControllers.getAllAdmins);
-router.get('/:id', auth(userRole.SUPER_ADMIN, userRole.ADMIN), AdminControllers.getAdminById);
+router.get('/', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), AdminControllers.getAllAdmins);
+router.get('/:id', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), AdminControllers.getAdminById);
 router.patch(
 	'/:id',
-	auth(userRole.SUPER_ADMIN, userRole.ADMIN),
+	auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
 	validateRequest(adminValidations.updateAdminSchema),
 	AdminControllers.updateAdmin
 );
-router.delete('/:id', auth(userRole.SUPER_ADMIN, userRole.ADMIN), AdminControllers.deleteFromDB);
+router.delete('/:id', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), AdminControllers.deleteFromDB);
 
 export const adminRoutes = router;
