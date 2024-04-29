@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
+import prisma from '../../utils/prisma';
 import verifyToken from '../../utils/verifyToken';
 import config from '../config';
 import apiError from '../errors/apiError';
@@ -13,6 +14,8 @@ const auth =
 				throw new apiError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
 			}
 			const verifiedUser = verifyToken(token, config.accessSecret as string);
+
+			await prisma.admin.findUniqueOrThrow({ where: { email: verifiedUser.email, role:d } });
 
 			if (roles.length && !roles.includes(verifiedUser.role)) {
 				throw new apiError(httpStatus.FORBIDDEN, 'You are not authorized!');
