@@ -15,7 +15,7 @@ const auth =
 			}
 			const verifiedUser = verifyToken(token, config.accessSecret as string);
 
-			await prisma.admin.findUniqueOrThrow({ where: { email: verifiedUser.email, role:d } });
+			await prisma.admin.findUniqueOrThrow({ where: { email: verifiedUser.email } });
 
 			if (roles.length && !roles.includes(verifiedUser.role)) {
 				throw new apiError(httpStatus.FORBIDDEN, 'You are not authorized!');
