@@ -63,6 +63,9 @@ const getAdminByIdFromDb = async (id: string) => {
 		where: {
 			id: id,
 			isDeleted: false
+		},
+		include: {
+			user: true
 		}
 	});
 	return result;

@@ -104,6 +104,15 @@ const getAllUsers = async (params: any, options: IPaginationOptions) => {
 		take: limit,
 		orderBy: {
 			[sortBy]: sortOrder
+		},
+		select: {
+			id: true,
+			email: true,
+			role: true,
+			createdAt: true,
+			admin: true,
+			doctor: true,
+			patient: true
 		}
 	});
 
