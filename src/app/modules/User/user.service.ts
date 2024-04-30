@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, UserRole } from '@prisma/client';
+import { Prisma, PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { Request } from 'express';
 import fileUploader from '../../../utils/fileUploader';
@@ -130,9 +130,27 @@ const getAllUsers = async (params: any, options: IPaginationOptions) => {
 	};
 };
 
+const changeStatus = async (id: string, status: UserStatus) => {
+	await prisma.user.findUniqueOrThrow({
+		where: {
+			id
+		}
+	});
+	const user = await prisma.user.update({
+		where: {
+			id
+		},
+		data: {
+			status
+		}
+	});
+	return user;
+};
+
 export const userServices = {
 	createAdmin,
 	createDoctor,
 	createPatient,
-	getAllUsers
+	getAllUsers,
+	changeStatus
 };

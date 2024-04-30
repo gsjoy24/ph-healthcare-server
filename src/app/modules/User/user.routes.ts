@@ -2,6 +2,7 @@ import { UserRole } from '@prisma/client';
 import express, { NextFunction, Request, Response } from 'express';
 import fileUploader from '../../../utils/fileUploader';
 import auth from '../../middlewares/auth';
+import validateRequest from '../../middlewares/validateRequest';
 import { userControllers } from './user.controller';
 import userValidations from './user.validation';
 
@@ -38,6 +39,11 @@ router.post(
 	}
 );
 
-
+router.patch(
+	'/:id/change-status',
+	auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+	validateRequest(userValidations.changeStatus),
+	userControllers.changeStatus
+);
 
 export const userRoutes = router;
