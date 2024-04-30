@@ -16,6 +16,7 @@ router.post(
 		userControllers.createAdmin(req, res, next);
 	}
 );
+
 router.post(
 	'/create-doctor',
 	auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
@@ -25,6 +26,7 @@ router.post(
 		userControllers.createDoctor(req, res, next);
 	}
 );
+
 router.post(
 	'/create-patient',
 	fileUploader.upload.single('file'),

@@ -44,11 +44,15 @@ const getAllAdmins = async (params: IAdminFilterRequest, options: IPaginationOpt
 		}
 	});
 
+	const total = await prisma.admin.count({
+		where: { AND: conditions }
+	});
+
 	return {
 		meta: {
 			limit,
 			page,
-			total: result.length
+			total
 		},
 		data: result
 	};
