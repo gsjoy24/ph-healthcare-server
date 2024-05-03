@@ -147,10 +147,15 @@ const changeStatus = async (id: string, status: UserStatus) => {
 	return user;
 };
 
+const getMyProfile = async (id: string) => {
+	console.log({ id });
+};
+
 export const userServices = {
 	createAdmin,
 	createDoctor,
 	createPatient,
 	getAllUsers,
-	changeStatus
+	changeStatus,
+	getMyProfile
 };
