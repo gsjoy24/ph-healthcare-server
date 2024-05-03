@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { Request } from 'express';
+import e, { Request } from 'express';
 import fileUploader from '../../../utils/fileUploader';
 import config from '../../config';
 import { IPaginationOptions } from '../../types/pagination';
@@ -147,15 +147,72 @@ const changeStatus = async (id: string, status: UserStatus) => {
 	return user;
 };
 
-const getMyProfile = async (id: string) => {
-	console.log({ id });
+const getMyProfile = async (email: string) => {
+	const user = await prisma.user.findUniqueOrThrow({
+		where: {
+			email,
+			status: UserStatus.ACTIVE
+		},
+		select: {
+			id: true,
+			email: true,
+			status: true,
+			role: true,
+			needPasswordChange: true,
+			createdAt: true,
+			updatedAt: true
+		}
+	});
+
+	let userProfile;
+	switch (user.role) {
+		case UserRole.ADMIN:
+			userProfile = await prisma.admin.findUnique({
+				where: {
+					email: user.email
+				}
+			});
+			break;
+		case UserRole.SUPER_ADMIN:
+			userProfile = await prisma.admin.findUnique({
+				where: {
+					email: user.email
+				}
+			});
+			break;
+		case UserRole.DOCTOR:
+			userProfile = await prisma.doctor.findUnique({
+				where: {
+					email: user.email
+				}
+			});
+			break;
+		case UserRole.PATIENT:
+			userProfile = await prisma.patient.findUnique({
+				where: {
+					email: user.email
+				}
+			});
+			break;
+		default:
+			break;
+	}
+
+	return { ...user, ...userProfile };
 };
 
-export const userServices = {
+const updateProfile = async (email: string, payload: Request) => {
+	console.log({ email, payload });
+};
+
+const userServices = {
 	createAdmin,
 	createDoctor,
 	createPatient,
 	getAllUsers,
 	changeStatus,
-	getMyProfile
+	getMyProfile,
+	updateProfile
 };
+
+export default userServices;

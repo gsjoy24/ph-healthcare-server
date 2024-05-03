@@ -4,7 +4,7 @@ import catchAsync from '../../../utils/catchAsync';
 import pick from '../../../utils/pick';
 import sendResponse from '../../../utils/sendResponse';
 import { userFilterAbleFields } from './user.constant';
-import { userServices } from './user.service';
+import userServices from './user.service';
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
 	const result = await userServices.createAdmin(req);
@@ -59,12 +59,22 @@ const changeStatus = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
-	const id = req.user?.id as string;
-	const result = await userServices.getMyProfile(id);
+	const email = req.user?.email as string;
+	const result = await userServices.getMyProfile(email);
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
 		message: 'User profile fetched successfully',
+		data: result
+	});
+});
+
+const updateProfile = catchAsync(async (req: Request, res: Response) => {
+	const result = await userServices.updateProfile(req?.user?.email as string, req.body);
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: 'User profile updated successfully',
 		data: result
 	});
 });
@@ -75,5 +85,6 @@ export const userControllers = {
 	createPatient,
 	getAllUsers,
 	changeStatus,
-	getMyProfile
+	getMyProfile,
+	updateProfile
 };
