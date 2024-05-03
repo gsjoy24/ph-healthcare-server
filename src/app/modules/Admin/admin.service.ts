@@ -5,7 +5,6 @@ import { adminSearchableFields } from './admin.constant';
 import { IAdminFilterRequest } from './admin.types';
 
 const getAllAdmins = async (params: IAdminFilterRequest, options: IPaginationOptions) => {
-
 	const { searchTerm, ...restFilterData } = params;
 	const limit = options.limit ? Number(options.limit) : 2;
 	const page = options.page ? (Number(options.page) - 1) * limit : 0;
@@ -44,6 +43,7 @@ const getAllAdmins = async (params: IAdminFilterRequest, options: IPaginationOpt
 			[sortBy]: sortOrder
 		}
 	});
+	console.log('conditions', conditions);
 
 	const total = await prisma.admin.count({
 		where: { AND: conditions }

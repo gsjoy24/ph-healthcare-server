@@ -16,7 +16,7 @@ const sendResponse = (res: Response, data: ResponseData) => {
 		success,
 		message
 	};
-	meta && resData.meta;
+	meta && (resData.meta = meta);
 	responseData && (resData.data = responseData);
 
 	res.status(statusCode).json(resData);

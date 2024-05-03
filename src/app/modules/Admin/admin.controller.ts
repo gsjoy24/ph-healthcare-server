@@ -10,6 +10,7 @@ const getAllAdmins = catchAsync(async (req: Request, res: Response) => {
 	const params = pick(req.query, adminFilterAbleFields);
 	const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 	const result = await AdminServices.getAllAdmins(params, options);
+
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
