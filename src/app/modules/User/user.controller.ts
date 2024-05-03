@@ -70,7 +70,7 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
-	const result = await userServices.updateProfile(req?.user?.email as string, req.body);
+	const result = await userServices.updateProfile(req?.user?.email as string, req);
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
