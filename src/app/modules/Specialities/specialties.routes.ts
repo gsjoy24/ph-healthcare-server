@@ -16,6 +16,10 @@ router.post(
 	}
 );
 
+router.get('/', SpecialtiesController.getSpecialties);
+
+router.delete('/:id', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), SpecialtiesController.deleteSpecialty);
+
 const SpecialtiesRoutes = router;
 
 export default SpecialtiesRoutes;

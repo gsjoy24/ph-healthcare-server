@@ -15,8 +15,24 @@ const createSpecialty = async (req: Request) => {
 	return newSpecialty;
 };
 
+const getSpecialties = async () => {
+	const specialties = await prisma.specialties.findMany();
+	return specialties;
+};
+
+const deleteSpecialty = async (id: string) => {
+	const specialty = await prisma.specialties.delete({
+		where: {
+			id
+		}
+	});
+	return specialty;
+};
+
 const SpecialtiesServices = {
-	createSpecialty
+	createSpecialty,
+	getSpecialties,
+	deleteSpecialty
 };
 
 export default SpecialtiesServices;
