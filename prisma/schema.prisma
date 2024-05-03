@@ -54,7 +54,8 @@ model Doctor {
   designation        String
   isDeleted          Boolean @default(false)
 
-  user User @relation(fields: [email], references: [email])
+  user               User                 @relation(fields: [email], references: [email])
+  doctorSpecialties DoctorSpecialties[]
 
   @@map("doctors")
 }
@@ -73,6 +74,26 @@ model Patient {
   user User @relation(references: [email], fields: [email])
 
   @@map("patients")
+}
+
+model Specialties {
+  id                 String               @id @default(uuid())
+  title              String               @unique
+  icon               String
+  doctorSpecialties DoctorSpecialties[]
+
+  @@map("specialties")
+}
+
+model DoctorSpecialties {
+  doctorId     String
+  specialityId String
+
+  speciality Specialties @relation(fields: [specialityId], references: [id])
+  doctor     Doctor       @relation(fields: [doctorId], references: [id])
+
+  @@id([doctorId, specialityId])
+  @@map("doctor_specialties")
 }
 
 enum UserRole {

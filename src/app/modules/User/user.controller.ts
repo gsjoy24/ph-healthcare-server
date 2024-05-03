@@ -8,9 +8,10 @@ import userServices from './user.service';
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
 	const result = await userServices.createAdmin(req);
-	res.status(201).json({
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Admin created successfully',
+		message: 'Admin created successfully.',
 		data: result
 	});
 });
