@@ -1,23 +1,25 @@
 import { Response } from 'express';
-type ResponseData<T> = {
+type ResponseData = {
 	statusCode: number;
 	success: boolean;
 	message: string;
-	data?: T | null | undefined;
+	data?: any;
 	meta?: {
 		limit: number;
 		page: number;
 		total: number;
 	};
 };
-const sendResponse = (res: Response, data: ResponseData<any>) => {
+const sendResponse = (res: Response, data: ResponseData) => {
 	const { statusCode, success, message, data: responseData, meta } = data;
-	res.status(statusCode).json({
+	const resData: Partial<ResponseData> = {
 		success,
-		message,
-		meta: meta || null,
-		data: responseData || null
-	});
+		message
+	};
+	meta && resData.meta;
+	responseData && (resData.data = responseData);
+
+	res.status(statusCode).json(resData);
 };
 
 export default sendResponse;
