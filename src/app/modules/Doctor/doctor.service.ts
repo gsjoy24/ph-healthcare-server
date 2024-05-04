@@ -33,7 +33,6 @@ const getAllDoctors = async (params: any, options: IPaginationOptions) => {
 			}))
 		});
 	}
-	console.log('conditions', conditions);
 
 	const result = await prisma.doctor.findMany({
 		where: { AND: conditions },
@@ -43,6 +42,7 @@ const getAllDoctors = async (params: any, options: IPaginationOptions) => {
 			[sortBy]: sortOrder
 		}
 	});
+
 
 	const total = await prisma.doctor.count({
 		where: { AND: conditions }
