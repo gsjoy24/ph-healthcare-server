@@ -44,7 +44,6 @@ const getAllDoctors = async (params: any, options: IPaginationOptions) => {
 			}
 		});
 	}
-	console.dir(conditions, { depth: 'infinity' });
 
 	if (Object.keys(restFilterData).length) {
 		conditions.push({
