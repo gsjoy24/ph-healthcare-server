@@ -1,4 +1,4 @@
-import { Patient, Prisma, UserStatus } from '@prisma/client';
+import { MedicalReport, Patient, PatientHealthData, Prisma, UserStatus } from '@prisma/client';
 import prisma from '../../../utils/prisma';
 import { IPaginationOptions } from '../../types/pagination';
 import { patientSearchableFields } from './patient.constant';
@@ -78,14 +78,61 @@ const getByIdFromDb = async (id: string) => {
 					createdAt: true,
 					updatedAt: true
 				}
-			}
+			},
+			patientHealthData: true,
+			medicalReport: true
 		}
 	});
 	return result;
 };
 
-const updateIntoDB = async (id: string, data: Partial<Patient>) => {
-	console.log('ss');
+const updateIntoDB = async (
+	id: string,
+	payload: Partial<Patient> & { patientHealthData: PatientHealthData } & { medicalReport: MedicalReport }
+) => {
+	const { patientHealthData, medicalReport, ...restData } = payload;
+	await getByIdFromDb(id);
+
+	await prisma.$transaction(async (tx) => {
+		// updating patient data
+		await tx.patient.update({
+			where: {
+				id
+			},
+			data: restData,
+			include: {
+				patientHealthData: true,
+				medicalReport: true
+			}
+		});
+
+		// updating patient health data
+		if (patientHealthData) {
+			await tx.patientHealthData.upsert({
+				where: {
+					patientId: id
+				},
+				update: patientHealthData,
+				create: {
+					...patientHealthData,
+					patientId: id
+				}
+			});
+		}
+		// updating patient medical report
+		if (medicalReport) {
+			await tx.medicalReport.create({
+				data: {
+					...medicalReport,
+					patientId: id
+				}
+			});
+		}
+	});
+
+	const updatedData = await getByIdFromDb(id);
+
+	return updatedData;
 };
 
 const deleteFromDB = async (id: string) => {
@@ -96,16 +143,28 @@ const deleteFromDB = async (id: string) => {
 	});
 
 	const result = await prisma.$transaction(async (tx) => {
+		// deleting patient health data and medical report
+		await tx.patientHealthData.delete({
+			where: {
+				patientId: id
+			}
+		});
+		await tx.medicalReport.deleteMany({
+			where: {
+				patientId: id
+			}
+		});
+
 		const deletedPatient = await tx.patient.delete({
 			where: {
 				id: id
 			}
 		});
 
-		const deletedUser = await tx.user.delete({
+		await tx.user.delete({
 			where: {
 				email: deletedPatient.email
-			}
+			} 
 		});
 
 		return deletedPatient;
