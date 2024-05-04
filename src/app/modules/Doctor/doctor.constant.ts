@@ -8,15 +8,16 @@ export const doctorFilterAbleFields = [
 	'appointmentFee',
 	'designation',
 	'currentWorkplace',
-	'qualifications'
+	'qualifications',
+	'specialties'
 ];
+
 export const doctorSearchableFields = [
 	'name',
 	'email',
 	'phone',
 	'address',
 	'registrationNumber',
-	'appointmentFee',
 	'designation',
 	'currentWorkplace',
 	'qualifications'

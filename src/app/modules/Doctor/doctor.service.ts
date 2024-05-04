@@ -8,7 +8,8 @@ type SpecialtyData = {
 };
 
 const getAllDoctors = async (params: any, options: IPaginationOptions) => {
-	const { searchTerm, ...restFilterData } = params;
+	const { searchTerm, specialties, ...restFilterData } = params;
+
 	const limit = options.limit ? Number(options.limit) : 2;
 	const page = options.page ? (Number(options.page) - 1) * limit : 0;
 	const sortBy = options.sortBy || 'createdAt';
@@ -28,6 +29,23 @@ const getAllDoctors = async (params: any, options: IPaginationOptions) => {
 		});
 	}
 
+	if (specialties && specialties.length > 0) {
+		conditions.push({
+			doctorSpecialties: {
+				some: {
+					specialties: {
+						// Replace 'specialties' with 'specialtyId'
+						title: {
+							contains: specialties,
+							mode: 'insensitive'
+						}
+					}
+				}
+			}
+		});
+	}
+	console.dir(conditions, { depth: 'infinity' });
+
 	if (Object.keys(restFilterData).length) {
 		conditions.push({
 			AND: Object.keys(restFilterData).map((key) => ({
@@ -44,6 +62,13 @@ const getAllDoctors = async (params: any, options: IPaginationOptions) => {
 		take: limit,
 		orderBy: {
 			[sortBy]: sortOrder
+		},
+		include: {
+			doctorSpecialties: {
+				include: {
+					specialties: true
+				}
+			}
 		}
 	});
 
@@ -89,7 +114,14 @@ const updateIntoDB = async (id: string, data: Partial<Doctor> & { specialties: S
 			where: {
 				id: id
 			},
-			data: restDocData
+			data: restDocData,
+			include: {
+				doctorSpecialties: {
+					include: {
+						specialties: true
+					}
+				}
+			}
 		});
 
 		if (specialties && specialties.length > 0) {
