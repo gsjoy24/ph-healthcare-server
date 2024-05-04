@@ -1,7 +1,11 @@
-import { Prisma, UserStatus } from '@prisma/client';
+import { Doctor, Prisma, UserStatus } from '@prisma/client';
 import prisma from '../../../utils/prisma';
 import { IPaginationOptions } from '../../types/pagination';
 import { doctorSearchableFields } from './doctor.constant';
+type SpecialtyData = {
+	specialtyId: string;
+	isDeleted: boolean;
+};
 
 const getAllDoctors = async (params: any, options: IPaginationOptions) => {
 	const { searchTerm, ...restFilterData } = params;
@@ -43,7 +47,6 @@ const getAllDoctors = async (params: any, options: IPaginationOptions) => {
 		}
 	});
 
-
 	const total = await prisma.doctor.count({
 		where: { AND: conditions }
 	});
@@ -71,23 +74,57 @@ const getByIdFromDb = async (id: string) => {
 	return result;
 };
 
-// const updateIntoDB = async (id: string, data: Partial<Admin>) => {
-// 	// this will throw an error if admin is not found
-// 	await prisma.admin.findUniqueOrThrow({
-// 		where: {
-// 			id: id,
-// 			isDeleted: false
-// 		}
-// 	});
+const updateIntoDB = async (id: string, data: Partial<Doctor> & { specialties: SpecialtyData[] }) => {
+	const { specialties, ...restDocData } = data;
+	// this will throw an error if doctor is not found
+	await prisma.doctor.findUniqueOrThrow({
+		where: {
+			id: id,
+			isDeleted: false
+		}
+	});
 
-// 	const result = await prisma.admin.update({
-// 		where: {
-// 			id: id
-// 		},
-// 		data
-// 	});
-// 	return result;
-// };
+	const result = await prisma.$transaction(async (tx) => {
+		const updatedDoctor = await tx.doctor.update({
+			where: {
+				id: id
+			},
+			data: restDocData
+		});
+
+		if (specialties && specialties.length > 0) {
+			// filter out specialties to be added
+			const addedSpecialties = specialties.filter((specialty) => !specialty.isDeleted);
+			if (addedSpecialties.length > 0) {
+				for (const specialty of addedSpecialties) {
+					await tx.doctorSpecialties.create({
+						data: {
+							doctorId: id,
+							specialtyId: specialty.specialtyId
+						}
+					});
+				}
+			}
+
+			// filter our specialties to be deleted
+			const deletedSpecialties = specialties.filter((specialty) => specialty.isDeleted);
+			if (deletedSpecialties.length > 0) {
+				for (const specialty of deletedSpecialties) {
+					await tx.doctorSpecialties.deleteMany({
+						where: {
+							doctorId: id,
+							specialtyId: specialty.specialtyId
+						}
+					});
+				}
+			}
+		}
+
+		return updatedDoctor;
+	});
+
+	return result;
+};
 
 const deleteFromDB = async (id: string) => {
 	await prisma.doctor.findUniqueOrThrow({
@@ -150,7 +187,7 @@ const softDeleteFromDB = async (id: string) => {
 const DoctorServices = {
 	getAllDoctors,
 	getByIdFromDb,
-	// updateIntoDB,
+	updateIntoDB,
 	deleteFromDB,
 	softDeleteFromDB
 };

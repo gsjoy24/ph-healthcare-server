@@ -31,17 +31,17 @@ const getAdminById = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
-// const updateAdmin = catchAsync(async (req: Request, res: Response) => {
-// 	const { id } = req.params;
-// 	const data = req.body;
-// 	const result = await DoctorServices.updateIntoDB(id, data);
-// 	sendResponse(res, {
-// 		statusCode: httpStatus.OK,
-// 		success: true,
-// 		message: 'Admin updated successfully',
-// 		data: result
-// 	});
-// });
+const updateDoctor = catchAsync(async (req: Request, res: Response) => {
+	const { id } = req.params;
+	const data = req.body;
+	const result = await DoctorServices.updateIntoDB(id, data);
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: 'Admin updated successfully',
+		data: result
+	});
+});
 
 const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
 	const { id } = req.params;
@@ -56,7 +56,7 @@ const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
 const DoctorControllers = {
 	getAllDoctors,
 	getAdminById,
-	// updateAdmin,
+	updateDoctor,
 	deleteFromDB
 };
 export default DoctorControllers;
