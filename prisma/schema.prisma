@@ -73,7 +73,9 @@ model Patient {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  user User @relation(references: [email], fields: [email])
+  user              User               @relation(references: [email], fields: [email])
+  patientHealthData PatientHealthData?
+  medicalReport     MedicalReport[]
 
   @@map("patients")
 }
@@ -92,10 +94,46 @@ model DoctorSpecialties {
   specialtyId String
 
   specialties Specialties @relation(fields: [specialtyId], references: [id])
-  doctor    Doctor      @relation(fields: [doctorId], references: [id])
+  doctor      Doctor      @relation(fields: [doctorId], references: [id])
 
   @@id([doctorId, specialtyId])
   @@map("doctor_specialties")
+}
+
+model PatientHealthData {
+  id                  String        @id @default(uuid())
+  patientId           String        @unique
+  patient             Patient       @relation(fields: [patientId], references: [id])
+  gender              Gender
+  dateOfBirth         DateTime
+  bloodGroup          BloodGroup
+  hasAllergies        Boolean
+  hasDiabetes         Boolean
+  height              String
+  weight              String
+  smokingStatus       Boolean
+  dietaryPreferences  String
+  pregnancyStatus     Boolean
+  mentalHealthHistory String
+  immunizationStatus  String
+  hasPastSurgeries    Boolean
+  recentAnxiety       Boolean
+  recentDepression    Boolean
+  maritalStatus       MaritalStatus
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@map("patient_health_datas")
+}
+
+model MedicalReport {
+  id         String   @id @default(uuid())
+  patientId  String
+  patient    Patient  @relation(fields: [patientId], references: [id])
+  reportName String
+  reportLink String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 enum UserRole {
@@ -115,4 +153,20 @@ enum Gender {
   MALE
   FEMALE
   OTHER
+}
+
+enum BloodGroup {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+}
+
+enum MaritalStatus {
+  MARRIED
+  UNMARRIED
 }
