@@ -10,7 +10,7 @@ type SpecialtyData = {
 const getAllDoctors = async (params: any, options: IPaginationOptions) => {
 	const { searchTerm, specialties, ...restFilterData } = params;
 
-	const limit = options.limit ? Number(options.limit) : 2;
+	const limit = options.limit ? Number(options.limit) : 10;
 	const page = options.page ? (Number(options.page) - 1) * limit : 0;
 	const sortBy = options.sortBy || 'createdAt';
 	const sortOrder = options.sortOrder || 'desc';

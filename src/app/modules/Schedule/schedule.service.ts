@@ -1,6 +1,7 @@
-import { Schedule } from '@prisma/client';
+import { Prisma, Schedule } from '@prisma/client';
 import { addHours, addMinutes, format } from 'date-fns';
 import prisma from '../../../utils/prisma';
+import { IPaginationOptions } from '../../types/pagination';
 import { TSchedule } from './schedule.types';
 
 const createSchedule = async (payload: TSchedule): Promise<Schedule[]> => {
@@ -53,9 +54,48 @@ const createSchedule = async (payload: TSchedule): Promise<Schedule[]> => {
 
 	return schedules;
 };
-const getAllFromDb = async () => {
-	const schedules = await prisma.schedule.findMany();
-	return schedules;
+
+const getAllFromDb = async (params: any, options: IPaginationOptions) => {
+	const { searchTerm, ...restFilterData } = params;
+
+	const limit = options.limit ? Number(options.limit) : 10;
+	const page = options.page ? (Number(options.page) - 1) * limit : 0;
+	const sortBy = options.sortBy || 'createdAt';
+	const sortOrder = options.sortOrder || 'desc';
+
+	const conditions: Prisma.ScheduleWhereInput[] = [];
+
+	if (Object.keys(restFilterData).length) {
+		conditions.push({
+			AND: Object.keys(restFilterData).map((key) => ({
+				[key]: {
+					equals: (restFilterData as any)[key]
+				}
+			}))
+		});
+	}
+
+	const result = await prisma.schedule.findMany({
+		where: { AND: conditions },
+		skip: page,
+		take: limit,
+		orderBy: {
+			[sortBy]: sortOrder
+		}
+	});
+
+	const total = await prisma.schedule.count({
+		where: { AND: conditions }
+	});
+
+	return {
+		meta: {
+			limit,
+			page,
+			total
+		},
+		data: result
+	};
 };
 const ScheduleServices = {
 	createSchedule,
