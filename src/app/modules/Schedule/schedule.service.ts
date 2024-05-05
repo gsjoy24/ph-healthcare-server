@@ -56,14 +56,32 @@ const createSchedule = async (payload: TSchedule): Promise<Schedule[]> => {
 };
 
 const getAllFromDb = async (params: any, options: IPaginationOptions) => {
-	const { searchTerm, ...restFilterData } = params;
+	const { startDate, endDate, ...restFilterData } = params;
+	console.log({ startDate, endDate });
 
 	const limit = options.limit ? Number(options.limit) : 10;
 	const page = options.page ? (Number(options.page) - 1) * limit : 0;
-	const sortBy = options.sortBy || 'createdAt';
-	const sortOrder = options.sortOrder || 'desc';
+	const sortBy = options.sortBy || 'startDateTime';
+	const sortOrder = options.sortOrder || 'asc';
 
 	const conditions: Prisma.ScheduleWhereInput[] = [];
+
+	if (startDate && endDate) {
+		conditions.push({
+			AND: [
+				{
+					startDateTime: {
+						gte: startDate
+					}
+				},
+				{
+					endDateTime: {
+						lte: endDate
+					}
+				}
+			]
+		});
+	}
 
 	if (Object.keys(restFilterData).length) {
 		conditions.push({
