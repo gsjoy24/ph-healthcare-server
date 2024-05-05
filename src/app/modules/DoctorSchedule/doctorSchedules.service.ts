@@ -1,5 +1,8 @@
 import { Doctor, DoctorSchedules, Prisma, User } from '@prisma/client';
+import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
 import prisma from '../../../utils/prisma';
+import apiError from '../../errors/apiError';
 import { IPaginationOptions } from '../../types/pagination';
 
 const createDoctorSchedule = async (doctorEmail: string, payload: { schedules: string[] }) => {
@@ -76,6 +79,9 @@ const getMySchedules = async (params: any, options: IPaginationOptions, user: Us
 		take: limit,
 		orderBy: {
 			[sortBy]: sortOrder
+		},
+		include: {
+			schedule: true
 		}
 	});
 
@@ -95,9 +101,36 @@ const getMySchedules = async (params: any, options: IPaginationOptions, user: Us
 	};
 };
 
+const deleteSchedule = async (email: string, scheduleId: string) => {
+	const doctorData = await prisma.doctor.findUnique({ where: { email: email } });
+
+	const isBookedSchedule = await prisma.doctorSchedules.findFirst({
+		where: {
+			doctorId: doctorData?.id as string,
+			scheduleId,
+			isBooked: true
+		}
+	});
+
+	if (isBookedSchedule) {
+		throw new apiError(httpStatus.BAD_REQUEST, 'You cannot delete a booked schedule!');
+	}
+	const result = await prisma.doctorSchedules.delete({
+		where: {
+			doctorId_scheduleId: {
+				doctorId: doctorData?.id as string,
+				scheduleId
+			}
+		}
+	});
+
+	return result;
+};
+
 const DoctorScheduleServices = {
 	createDoctorSchedule,
-	getMySchedules
+	getMySchedules,
+	deleteSchedule
 };
 
 export default DoctorScheduleServices;
