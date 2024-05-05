@@ -53,9 +53,13 @@ const createSchedule = async (payload: TSchedule): Promise<Schedule[]> => {
 
 	return schedules;
 };
-
+const getAllFromDb = async () => {
+	const schedules = await prisma.schedule.findMany();
+	return schedules;
+};
 const ScheduleServices = {
-	createSchedule
+	createSchedule,
+	getAllFromDb
 };
 
 export default ScheduleServices;
