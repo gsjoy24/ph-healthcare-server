@@ -1,7 +1,6 @@
 import { User, UserRole } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import { JwtPayload } from 'jsonwebtoken';
 import prisma from '../../utils/prisma';
 import verifyToken from '../../utils/verifyToken';
 import config from '../config';

@@ -5,8 +5,8 @@ import sendResponse from '../../../utils/sendResponse';
 import DoctorScheduleServices from './doctorSchedules.service';
 
 const createDoctorSchedules = catchAsync(async (req: Request, res: Response) => {
-	const id = req.user?.id;
-	const result = await DoctorScheduleServices.createDoctorSchedule(id as string, req.body);
+	const email = req.user?.email;
+	const result = await DoctorScheduleServices.createDoctorSchedule(email as string, req.body);
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
