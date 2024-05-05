@@ -1,11 +1,9 @@
-const createDoctorSchedule = async (doctorSchedule: any) => {
-	console.log({ doctorSchedule });
+const createDoctorSchedule = async (doctorId: string, doctorSchedule: any) => {
+	console.log({ doctorId, doctorSchedule });
 };
 
-
 const DoctorScheduleServices = {
-   createDoctorSchedule
-
-}
+	createDoctorSchedule
+};
 
 export default DoctorScheduleServices;

@@ -5,7 +5,7 @@ import DoctorSchedulesControllers from './doctorSchedules.controller';
 
 const router = express.Router();
 
-router.post('/create', auth(UserRole.DOCTOR), DoctorSchedulesControllers.createDoctorSchedules);
+router.post('/', auth(UserRole.DOCTOR), DoctorSchedulesControllers.createDoctorSchedules);
 
 const DoctorSchedules = router;
 
