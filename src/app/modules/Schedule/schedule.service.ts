@@ -1,4 +1,4 @@
-import { Prisma, Schedule } from '@prisma/client';
+import { DoctorSchedules, Prisma, Schedule, User } from '@prisma/client';
 import { addHours, addMinutes, format } from 'date-fns';
 import prisma from '../../../utils/prisma';
 import { IPaginationOptions } from '../../types/pagination';
@@ -55,9 +55,8 @@ const createSchedule = async (payload: TSchedule): Promise<Schedule[]> => {
 	return schedules;
 };
 
-const getAllFromDb = async (params: any, options: IPaginationOptions) => {
+const getAllFromDb = async (params: any, options: IPaginationOptions, user: User) => {
 	const { startDate, endDate, ...restFilterData } = params;
-	console.log({ startDate, endDate });
 
 	const limit = options.limit ? Number(options.limit) : 10;
 	const page = options.page ? (Number(options.page) - 1) * limit : 0;
@@ -93,8 +92,23 @@ const getAllFromDb = async (params: any, options: IPaginationOptions) => {
 		});
 	}
 
+	const doctorSchedule = await prisma.doctorSchedules.findMany({
+		where: {
+			doctor: {
+				email: user.email
+			}
+		}
+	});
+
+	const DoctorScheduleIds = doctorSchedule.map((schedule: DoctorSchedules) => schedule.scheduleId);
+
 	const result = await prisma.schedule.findMany({
-		where: { AND: conditions },
+		where: {
+			AND: conditions,
+			id: {
+				notIn: DoctorScheduleIds
+			}
+		},
 		skip: page,
 		take: limit,
 		orderBy: {
@@ -103,7 +117,12 @@ const getAllFromDb = async (params: any, options: IPaginationOptions) => {
 	});
 
 	const total = await prisma.schedule.count({
-		where: { AND: conditions }
+		where: {
+			AND: conditions,
+			id: {
+				notIn: DoctorScheduleIds
+			}
+		}
 	});
 
 	return {
@@ -115,6 +134,7 @@ const getAllFromDb = async (params: any, options: IPaginationOptions) => {
 		data: result
 	};
 };
+
 const ScheduleServices = {
 	createSchedule,
 	getAllFromDb

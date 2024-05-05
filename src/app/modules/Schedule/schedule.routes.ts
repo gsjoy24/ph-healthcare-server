@@ -7,10 +7,6 @@ const router = express.Router();
 
 router.post('/', auth(UserRole.ADMIN, UserRole.SUPER_ADMIN), ScheduleControllers.createSchedule);
 
-router.get(
-	'/',
-	// auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.DOCTOR),
-	ScheduleControllers.getAllFromDb
-);
+router.get('/', auth(UserRole.DOCTOR), ScheduleControllers.getAllFromDb);
 
 export const ScheduleRoutes = router;

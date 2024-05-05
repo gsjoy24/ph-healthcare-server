@@ -1,3 +1,4 @@
+import { User } from '@prisma/client';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../utils/catchAsync';
@@ -18,7 +19,7 @@ const createSchedule = catchAsync(async (req: Request, res: Response) => {
 const getAllFromDb = catchAsync(async (req: Request, res: Response) => {
 	const params = pick(req.query, ['startDate', 'endDate']);
 	const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-	const result = await ScheduleServices.getAllFromDb(params, options);
+	const result = await ScheduleServices.getAllFromDb(params, options, req.user as User);
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,

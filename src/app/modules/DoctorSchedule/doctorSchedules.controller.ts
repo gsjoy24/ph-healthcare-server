@@ -1,6 +1,8 @@
+import { User } from '@prisma/client';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../utils/catchAsync';
+import pick from '../../../utils/pick';
 import sendResponse from '../../../utils/sendResponse';
 import DoctorScheduleServices from './doctorSchedules.service';
 
@@ -15,8 +17,21 @@ const createDoctorSchedules = catchAsync(async (req: Request, res: Response) => 
 	});
 });
 
+const getMySchedules = catchAsync(async (req: Request, res: Response) => {
+	const params = pick(req.query, ['startDate', 'endDate', 'isBooked']);
+	const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+	const result = await DoctorScheduleServices.getMySchedules(params, options, req.user as User);
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: 'Schedules fetched successfully',
+		data: result
+	});
+});
+
 const DoctorSchedulesControllers = {
-	createDoctorSchedules
+	createDoctorSchedules,
+	getMySchedules
 };
 
 export default DoctorSchedulesControllers;
