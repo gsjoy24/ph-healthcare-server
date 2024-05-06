@@ -1,6 +1,7 @@
 import { DoctorSchedules, Prisma, Schedule, User } from '@prisma/client';
 import { addHours, addMinutes, format } from 'date-fns';
 import prisma from '../../../utils/prisma';
+import calculatePagination from '../../../utils/src/helpars/paginationHelper';
 import { IPaginationOptions } from '../../types/pagination';
 import { TSchedule } from './schedule.types';
 
@@ -58,10 +59,8 @@ const createSchedule = async (payload: TSchedule): Promise<Schedule[]> => {
 const getAllFromDb = async (params: any, options: IPaginationOptions, user: User) => {
 	const { startDate, endDate, ...restFilterData } = params;
 
-	const limit = options.limit ? Number(options.limit) : 10;
-	const page = options.page ? (Number(options.page) - 1) * limit : 0;
+	const { limit, page, skip, sortOrder } = calculatePagination(options);
 	const sortBy = options.sortBy || 'startDateTime';
-	const sortOrder = options.sortOrder || 'asc';
 
 	const conditions: Prisma.ScheduleWhereInput[] = [];
 
@@ -109,7 +108,7 @@ const getAllFromDb = async (params: any, options: IPaginationOptions, user: User
 				notIn: DoctorScheduleIds
 			}
 		},
-		skip: page,
+		skip,
 		take: limit,
 		orderBy: {
 			[sortBy]: sortOrder

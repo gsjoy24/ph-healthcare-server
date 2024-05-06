@@ -2,6 +2,7 @@ import { Prisma, PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { Request } from 'express';
 import fileUploader from '../../../utils/fileUploader';
+import calculatePagination from '../../../utils/src/helpars/paginationHelper';
 import config from '../../config';
 import { IPaginationOptions } from '../../types/pagination';
 import { userSearchableFields } from './user.constant';
@@ -73,10 +74,7 @@ const createPatient = async (payload: Request) => {
 
 const getAllUsers = async (params: any, options: IPaginationOptions) => {
 	const { searchTerm, ...restFilterData } = params;
-	const limit = options.limit ? Number(options.limit) : 10;
-	const page = options.page ? (Number(options.page) - 1) * limit : 0;
-	const sortBy = options.sortBy || 'createdAt';
-	const sortOrder = options.sortOrder || 'desc';
+	const { limit, page, skip, sortBy, sortOrder } = calculatePagination(options);
 
 	const conditions: Prisma.UserWhereInput[] = [];
 
@@ -100,7 +98,7 @@ const getAllUsers = async (params: any, options: IPaginationOptions) => {
 
 	const result = await prisma.user.findMany({
 		where: { AND: conditions },
-		skip: page,
+		skip,
 		take: limit,
 		orderBy: {
 			[sortBy]: sortOrder

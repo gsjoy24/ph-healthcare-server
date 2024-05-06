@@ -1,15 +1,13 @@
 import { MedicalReport, Patient, PatientHealthData, Prisma, UserStatus } from '@prisma/client';
 import prisma from '../../../utils/prisma';
+import calculatePagination from '../../../utils/src/helpars/paginationHelper';
 import { IPaginationOptions } from '../../types/pagination';
 import { patientSearchableFields } from './patient.constant';
 
 const getAllPatients = async (params: any, options: IPaginationOptions) => {
 	const { searchTerm, ...restFilterData } = params;
 
-	const limit = options.limit ? Number(options.limit) : 10;
-	const page = options.page ? (Number(options.page) - 1) * limit : 0;
-	const sortBy = options.sortBy || 'createdAt';
-	const sortOrder = options.sortOrder || 'desc';
+	const { limit, page, skip, sortBy, sortOrder } = calculatePagination(options);
 
 	const conditions: Prisma.PatientWhereInput[] = [
 		{
@@ -37,7 +35,7 @@ const getAllPatients = async (params: any, options: IPaginationOptions) => {
 
 	const result = await prisma.patient.findMany({
 		where: { AND: conditions },
-		skip: page,
+		skip,
 		take: limit,
 		orderBy: {
 			[sortBy]: sortOrder

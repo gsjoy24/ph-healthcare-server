@@ -1,5 +1,6 @@
 import { Doctor, Prisma, UserStatus } from '@prisma/client';
 import prisma from '../../../utils/prisma';
+import calculatePagination from '../../../utils/src/helpars/paginationHelper';
 import { IPaginationOptions } from '../../types/pagination';
 import { doctorSearchableFields } from './doctor.constant';
 type SpecialtyData = {
@@ -10,10 +11,7 @@ type SpecialtyData = {
 const getAllDoctors = async (params: any, options: IPaginationOptions) => {
 	const { searchTerm, specialties, ...restFilterData } = params;
 
-	const limit = options.limit ? Number(options.limit) : 10;
-	const page = options.page ? (Number(options.page) - 1) * limit : 0;
-	const sortBy = options.sortBy || 'createdAt';
-	const sortOrder = options.sortOrder || 'desc';
+	const { limit, page, skip, sortBy, sortOrder } = calculatePagination(options);
 
 	const conditions: Prisma.DoctorWhereInput[] = [
 		{
@@ -57,7 +55,7 @@ const getAllDoctors = async (params: any, options: IPaginationOptions) => {
 
 	const result = await prisma.doctor.findMany({
 		where: { AND: conditions },
-		skip: page,
+		skip: skip,
 		take: limit,
 		orderBy: {
 			[sortBy]: sortOrder
