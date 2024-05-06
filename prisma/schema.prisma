@@ -59,6 +59,7 @@ model Doctor {
   user              User                @relation(fields: [email], references: [email])
   doctorSpecialties DoctorSpecialties[]
   doctorSchedules   DoctorSchedules[]
+  appointment       Appointment[]
 
   @@map("doctors")
 }
@@ -70,6 +71,7 @@ model Schedule {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   doctorSchedules DoctorSchedules[]
+  appointment     Appointment?
 
   @@map("schedules")
 }
@@ -79,7 +81,7 @@ model DoctorSchedules {
   doctor        Doctor   @relation(fields: [doctorId], references: [id])
   scheduleId    String
   schedule      Schedule @relation(fields: [scheduleId], references: [id])
-  isBooked      Boolean  @default(false) 
+  isBooked      Boolean  @default(false)
   appointmentId String?
 
   @@id([doctorId, scheduleId])
@@ -100,6 +102,7 @@ model Patient {
   user              User               @relation(references: [email], fields: [email])
   patientHealthData PatientHealthData?
   medicalReport     MedicalReport[]
+  appointment       Appointment[]
 
   @@map("patients")
 }
@@ -158,6 +161,35 @@ model MedicalReport {
   reportLink String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model Appointment {
+  id             String            @id @default(uuid())
+  patientId      String
+  patient        Patient           @relation(fields: [patientId], references: [id])
+  doctorId       String
+  doctor         Doctor            @relation(fields: [doctorId], references: [id])
+  scheduleId     String            @unique
+  schedule       Schedule          @relation(fields: [scheduleId], references: [id])
+  videoCallingId String
+  status         AppointmentStatus @default(SCHEDULED)
+  paymentStatus  PaymentStatus     @default(UNPAID)
+  createAt       DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@map("appointments")
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  INPROGRESS
+  COMPLETED
+  CANCELED
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
 }
 
 enum UserRole {
