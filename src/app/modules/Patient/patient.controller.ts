@@ -13,7 +13,7 @@ const getAllPatients = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Patients fetched successfully',
+		message: 'Patients fetched successfully!',
 		meta: result?.meta,
 		data: result?.data
 	});
@@ -26,7 +26,7 @@ const getPatientById = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Patient fetched successfully',
+		message: 'Patient fetched successfully!',
 		data: result
 	});
 });
@@ -38,7 +38,7 @@ const updatePatient = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Patient updated successfully',
+		message: 'Patient updated successfully!',
 		data: result
 	});
 });
@@ -49,7 +49,7 @@ const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Patient deleted successfully'
+		message: 'Patient deleted successfully!'
 	});
 });
 
@@ -59,7 +59,7 @@ const softDeleteFromDB = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Patient softly deleted successfully'
+		message: 'Patient softly deleted successfully!'
 	});
 });
 

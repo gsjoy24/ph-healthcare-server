@@ -13,7 +13,7 @@ const getAllDoctors = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Doctors fetched successfully',
+		message: 'Doctors fetched successfully!',
 		meta: result?.meta,
 		data: result?.data
 	});
@@ -26,7 +26,7 @@ const getAdminById = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Doctor fetched successfully',
+		message: 'Doctor fetched successfully!',
 		data: result
 	});
 });
@@ -38,7 +38,7 @@ const updateDoctor = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Admin updated successfully',
+		message: 'Admin updated successfully!',
 		data: result
 	});
 });
@@ -49,7 +49,7 @@ const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Doctor deleted successfully'
+		message: 'Doctor deleted successfully!'
 	});
 });
 

@@ -11,7 +11,7 @@ const createSchedule = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Schedule created successfully',
+		message: 'Schedule created successfully!',
 		data: result
 	});
 });
@@ -23,7 +23,7 @@ const getAllFromDb = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Schedules fetched successfully',
+		message: 'Schedules fetched successfully!',
 		data: result
 	});
 });
@@ -33,7 +33,7 @@ const getById = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Schedule fetched successfully',
+		message: 'Schedule fetched successfully!',
 		data: result
 	});
 });
@@ -43,7 +43,7 @@ const deleteById = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Schedule deleted successfully'
+		message: 'Schedule deleted successfully!'
 	});
 });
 

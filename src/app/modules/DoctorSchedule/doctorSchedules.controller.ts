@@ -24,7 +24,7 @@ const getMySchedules = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Schedules fetched successfully',
+		message: 'Schedules fetched successfully!',
 		data: result
 	});
 });
@@ -36,7 +36,7 @@ const deleteSchedule = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: 'Schedule deleted successfully',
+		message: 'Schedule deleted successfully!',
 		data: result
 	});
 });
