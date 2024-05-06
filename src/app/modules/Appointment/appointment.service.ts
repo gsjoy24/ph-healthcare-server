@@ -6,7 +6,7 @@ import prisma from '../../../utils/prisma';
 const createAppointment = async (payload: Appointment, user: JwtPayload) => {
 	const patient = await prisma.patient.findUnique({ where: { email: user.email } });
 
-	await prisma.doctor.findUniqueOrThrow({ where: { id: payload.doctorId } });
+	const doctorData = await prisma.doctor.findUniqueOrThrow({ where: { id: payload.doctorId } });
 
 	await prisma.doctorSchedules.findFirstOrThrow({
 		where: {
@@ -37,6 +37,18 @@ const createAppointment = async (payload: Appointment, user: JwtPayload) => {
 			data: {
 				appointmentId: createdAppointment.id,
 				isBooked: true
+			}
+		});
+		const today = new Date();
+		const transactionId = `PH-HealthCare-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}-${today.getHours()}-${today.getMinutes()}-${Math.floor(
+			Math.random() * 1000
+		)}`;
+
+		await tx.payment.create({
+			data: {
+				appointmentId: createdAppointment.id,
+				amount: doctorData.appointmentFee,
+				transactionId
 			}
 		});
 
