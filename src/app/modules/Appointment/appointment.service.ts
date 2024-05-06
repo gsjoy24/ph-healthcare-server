@@ -1,7 +1,8 @@
-import { Appointment } from '@prisma/client';
+import { Appointment, Prisma, UserRole } from '@prisma/client';
 import { JwtPayload } from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import prisma from '../../../utils/prisma';
+import calculatePagination from '../../../utils/src/helpars/paginationHelper';
 import { IPaginationOptions } from '../../types/pagination';
 
 const createAppointment = async (payload: Appointment, user: JwtPayload) => {
@@ -60,7 +61,66 @@ const createAppointment = async (payload: Appointment, user: JwtPayload) => {
 };
 
 const getMyAppointment = async (user: JwtPayload, filters: any, options: IPaginationOptions) => {
-	console.log({ user, filters, options });
+	const { limit, page, skip, sortBy, sortOrder } = calculatePagination(options);
+	const conditions: Prisma.AppointmentWhereInput[] = [];
+
+	if (user.role === UserRole.PATIENT) {
+		conditions.push({
+			patient: {
+				email: user.email
+			}
+		});
+	} else if (user.role === UserRole.DOCTOR) {
+		conditions.push({
+			doctor: {
+				email: user.email
+			}
+		});
+	}
+
+	if (Object.keys(filters).length) {
+		conditions.push({
+			AND: Object.keys(filters).map((key) => ({
+				[key]: {
+					equals: (filters as any)[key]
+				}
+			}))
+		});
+	}
+
+	const result = await prisma.appointment.findMany({
+		where: { AND: conditions },
+		skip,
+		take: limit,
+		orderBy: {
+			[sortBy]: sortOrder
+		},
+		include:
+			user.role === UserRole.PATIENT
+				? { doctor: true, schedule: true }
+				: {
+						patient: {
+							include: {
+								medicalReport: true,
+								patientHealthData: true
+							}
+						},
+						schedule: true
+				  }
+	});
+
+	const total = await prisma.appointment.count({
+		where: { AND: conditions }
+	});
+
+	return {
+		meta: {
+			limit,
+			page,
+			total
+		},
+		data: result
+	};
 };
 
 const AppointmentServices = {

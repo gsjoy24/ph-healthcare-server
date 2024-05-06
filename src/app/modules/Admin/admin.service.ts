@@ -43,7 +43,6 @@ const getAllAdmins = async (params: IAdminFilterRequest, options: IPaginationOpt
 			[sortBy]: sortOrder
 		}
 	});
-	console.dir(conditions, { depth: 'infinity' });
 
 	const total = await prisma.admin.count({
 		where: { AND: conditions }

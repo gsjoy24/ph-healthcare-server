@@ -106,7 +106,6 @@ const forgotPassword = async (email: string) => {
 	const resetToken = createToken(tokenData, config.reset_pass_secret as string, config.reset_pass_secret_exp as string);
 
 	const resetPassLink = config.base_app_url + `/reset-password?id=${userData.id}&token=${resetToken}`;
-	console.log(resetPassLink);
 	const emailTemp = `
 	<!DOCTYPE html>
 <html lang="en">
@@ -206,9 +205,8 @@ const resetPassword = async (id: string, token: string, password: string) => {
 			needPasswordChange: false
 		}
 	});
-	console.log(result);
 
-	return;
+	return result;
 };
 
 const AuthServices = {
