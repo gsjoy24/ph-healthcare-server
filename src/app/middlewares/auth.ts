@@ -1,6 +1,7 @@
-import { User, UserRole } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
 import prisma from '../../utils/prisma';
 import verifyToken from '../../utils/verifyToken';
 import config from '../config';
@@ -15,6 +16,7 @@ const auth =
 			if (!token) {
 				throw new apiError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
 			}
+
 			const verifiedUser = verifyToken(token, config.accessSecret as string);
 
 			if (verifiedUser.role === UserRole.ADMIN || verifiedUser.role === UserRole.SUPER_ADMIN) {
@@ -30,7 +32,7 @@ const auth =
 			if (roles.length && !roles.includes(verifiedUser.role)) {
 				throw new apiError(httpStatus.FORBIDDEN, 'You are not authorized!');
 			}
-			req.user = verifiedUser as User;
+			req.user = verifiedUser as JwtPayload;
 			next();
 		} catch (error) {
 			next(error);
