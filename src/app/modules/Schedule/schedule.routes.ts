@@ -9,4 +9,8 @@ router.post('/', auth(UserRole.ADMIN, UserRole.SUPER_ADMIN), ScheduleControllers
 
 router.get('/', auth(UserRole.DOCTOR), ScheduleControllers.getAllFromDb);
 
+router.get('/:id', auth(UserRole.DOCTOR), ScheduleControllers.getById);
+
+router.delete('/:id', auth(UserRole.ADMIN, UserRole.SUPER_ADMIN), ScheduleControllers.deleteById);
+
 export const ScheduleRoutes = router;

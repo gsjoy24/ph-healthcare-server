@@ -135,9 +135,31 @@ const getAllFromDb = async (params: any, options: IPaginationOptions, user: User
 	};
 };
 
+const getById = async (id: string) => {
+	const result = await prisma.schedule.findUniqueOrThrow({
+		where: {
+			id
+		}
+	});
+
+	return result;
+};
+
+const deleteById = async (id: string) => {
+	const result = await prisma.schedule.delete({
+		where: {
+			id
+		}
+	});
+
+	return result;
+};
+
 const ScheduleServices = {
 	createSchedule,
-	getAllFromDb
+	getAllFromDb,
+	getById,
+	deleteById
 };
 
 export default ScheduleServices;

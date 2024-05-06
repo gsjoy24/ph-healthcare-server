@@ -1,6 +1,5 @@
 import { Doctor, DoctorSchedules, Prisma, User } from '@prisma/client';
 import httpStatus from 'http-status';
-import { JwtPayload } from 'jsonwebtoken';
 import prisma from '../../../utils/prisma';
 import apiError from '../../errors/apiError';
 import { IPaginationOptions } from '../../types/pagination';
