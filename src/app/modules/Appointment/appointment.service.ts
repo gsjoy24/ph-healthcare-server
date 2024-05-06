@@ -2,6 +2,7 @@ import { Appointment } from '@prisma/client';
 import { JwtPayload } from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import prisma from '../../../utils/prisma';
+import { IPaginationOptions } from '../../types/pagination';
 
 const createAppointment = async (payload: Appointment, user: JwtPayload) => {
 	const patient = await prisma.patient.findUnique({ where: { email: user.email } });
@@ -58,8 +59,13 @@ const createAppointment = async (payload: Appointment, user: JwtPayload) => {
 	return result;
 };
 
+const getMyAppointment = async (user: JwtPayload, filters: any, options: IPaginationOptions) => {
+	console.log({ user, filters, options });
+};
+
 const AppointmentServices = {
-	createAppointment
+	createAppointment,
+	getMyAppointment
 };
 
 export default AppointmentServices;
