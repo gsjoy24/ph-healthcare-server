@@ -5,7 +5,8 @@ import sendResponse from '../../../utils/sendResponse';
 import PaymentServices from './payment.service';
 
 const initPayment = catchAsync(async (req: Request, res: Response) => {
-	const result = await PaymentServices.initPayment();
+   const appointmentId = req.params.appointmentId;
+	const result = await PaymentServices.initPayment(appointmentId);
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,

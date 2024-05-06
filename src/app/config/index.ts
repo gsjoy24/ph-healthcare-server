@@ -24,5 +24,10 @@ export default {
 	cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
 
 	sslcommerz_store_id: process.env.SSLCOMMERZ_STORE_ID,
-	sslcommerz_store_password: process.env.SSLCOMMERZ_STORE_PASSWORD
+	sslcommerz_store_password: process.env.SSLCOMMERZ_STORE_PASSWORD,
+	success_url: process.env.SUCCESS_URL,
+	failed_url: process.env.FAILED_URL,
+	cancel_url: process.env.CANCEL_URL,
+	ssl_payment_url: process.env.SSL_PAYMENT_URL,
+	ssl_validation_url: process.env.SSl_VALIDATION_URL
 };
