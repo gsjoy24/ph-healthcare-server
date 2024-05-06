@@ -78,11 +78,12 @@ model Schedule {
 
 model DoctorSchedules {
   doctorId      String
-  doctor        Doctor   @relation(fields: [doctorId], references: [id])
+  doctor        Doctor       @relation(fields: [doctorId], references: [id])
   scheduleId    String
-  schedule      Schedule @relation(fields: [scheduleId], references: [id])
-  isBooked      Boolean  @default(false)
-  appointmentId String?
+  schedule      Schedule     @relation(fields: [scheduleId], references: [id])
+  isBooked      Boolean      @default(false)
+  appointmentId String?      @unique
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
 
   @@id([doctorId, scheduleId])
   @@map("doctor_schedules")
@@ -164,18 +165,19 @@ model MedicalReport {
 }
 
 model Appointment {
-  id             String            @id @default(uuid())
-  patientId      String
-  patient        Patient           @relation(fields: [patientId], references: [id])
-  doctorId       String
-  doctor         Doctor            @relation(fields: [doctorId], references: [id])
-  scheduleId     String            @unique
-  schedule       Schedule          @relation(fields: [scheduleId], references: [id])
-  videoCallingId String
-  status         AppointmentStatus @default(SCHEDULED)
-  paymentStatus  PaymentStatus     @default(UNPAID)
-  createAt       DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  id              String            @id @default(uuid())
+  patientId       String
+  patient         Patient           @relation(fields: [patientId], references: [id])
+  doctorId        String
+  doctor          Doctor            @relation(fields: [doctorId], references: [id])
+  scheduleId      String            @unique
+  schedule        Schedule          @relation(fields: [scheduleId], references: [id])
+  videoCallingId  String
+  status          AppointmentStatus @default(SCHEDULED)
+  paymentStatus   PaymentStatus     @default(UNPAID)
+  createAt        DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  DoctorSchedules DoctorSchedules?
 
   @@map("appointments")
 }
