@@ -54,8 +54,22 @@ const initPayment = async (paymentInitData: any) => {
 	}
 };
 
+const validatePayment = async (payload: any) => {
+	try {
+		const response = await axios({
+			method: 'GET',
+			url: `${config.ssl_validation_url}?val_id=${payload.val_id}&store_id=${config.sslcommerz_store_id}&store_passwd=${config.sslcommerz_store_password}&format=json`
+		});
+
+		return response.data;
+	} catch (error) {
+		throw new apiError(httpStatus.BAD_GATEWAY, 'Payment initiation failed!');
+	}
+};
+
 const SSLServices = {
-	initPayment
+	initPayment,
+	validatePayment
 };
 
 export default SSLServices;
