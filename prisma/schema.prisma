@@ -55,12 +55,13 @@ model Doctor {
   isDeleted          Boolean  @default(false)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
-
+  
   user              User                @relation(fields: [email], references: [email])
   doctorSpecialties DoctorSpecialties[]
   doctorSchedules   DoctorSchedules[]
   appointment       Appointment[]
   prescription      Prescription[]
+  review            Review[]
 
   @@map("doctors")
 }
@@ -106,6 +107,7 @@ model Patient {
   medicalReport     MedicalReport[]
   appointment       Appointment[]
   prescription      Prescription[]
+  review            Review[]
 
   @@map("patients")
 }
@@ -182,6 +184,7 @@ model Appointment {
   doctorSchedules DoctorSchedules?
   payment         Payment?
   prescription    Prescription?
+  review          Review?
 
   @@map("appointments")
 }
@@ -212,6 +215,24 @@ model Prescription {
   followUpDate  DateTime?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+
+  @@map("prescriptions")
+}
+
+model Review {
+  id            String      @id @default(uuid())
+  patientId     String
+  patient       Patient     @relation(fields: [patientId], references: [id])
+  doctorId      String
+  doctor        Doctor      @relation(fields: [doctorId], references: [id])
+  appointmentId String      @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  rating        Float
+  comment       String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("reviews")
 }
 
 enum AppointmentStatus {
