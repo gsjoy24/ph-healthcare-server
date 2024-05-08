@@ -1,8 +1,10 @@
 import { Appointment, AppointmentStatus, Prisma, UserRole } from '@prisma/client';
+import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import prisma from '../../../utils/prisma';
 import calculatePagination from '../../../utils/src/helpars/paginationHelper';
+import apiError from '../../errors/apiError';
 import { IPaginationOptions } from '../../types/pagination';
 
 const createAppointment = async (payload: Appointment, user: JwtPayload) => {
@@ -123,8 +125,26 @@ const getMyAppointment = async (user: JwtPayload, filters: any, options: IPagina
 	};
 };
 
-const changeAppointmentStatus = async (appointmentId: string, status: AppointmentStatus) => {
-	console.log({ appointmentId, status });
+const changeAppointmentStatus = async (appointmentId: string, status: AppointmentStatus, user: JwtPayload) => {
+	const appointmentData = await prisma.appointment.findUniqueOrThrow({
+		where: { id: appointmentId },
+		include: {
+			doctor: true
+		}
+	});
+	if (user.role === UserRole.DOCTOR) {
+		if (appointmentData.doctor.email !== user.email) {
+			throw new apiError(httpStatus.UNAUTHORIZED, 'You are not authorized to change this appointment status!');
+		}
+	}
+	const result = await prisma.appointment.update({
+		where: { id: appointmentId },
+		data: {
+			status
+		}
+	});
+
+	return result;
 };
 
 const AppointmentServices = {
