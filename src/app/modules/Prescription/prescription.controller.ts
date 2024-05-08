@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
 import catchAsync from '../../../utils/catchAsync';
 import sendResponse from '../../../utils/sendResponse';
 import PrescriptionServices from './prescription.service';
 
 const createPrescription = catchAsync(async (req: Request, res: Response) => {
-	const result = await PrescriptionServices.createPrescription(req.body);
+	const result = await PrescriptionServices.createPrescription(req.body, req.user as JwtPayload);
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
