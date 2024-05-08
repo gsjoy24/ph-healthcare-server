@@ -1,6 +1,6 @@
 import { MedicalReport, Patient, PatientHealthData, Prisma, UserStatus } from '@prisma/client';
+import calculatePagination from '../../../utils/paginationHelper';
 import prisma from '../../../utils/prisma';
-import calculatePagination from '../../../utils/src/helpars/paginationHelper';
 import { IPaginationOptions } from '../../types/pagination';
 import { patientSearchableFields } from './patient.constant';
 

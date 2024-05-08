@@ -1,6 +1,6 @@
 import { Doctor, Prisma, UserStatus } from '@prisma/client';
+import calculatePagination from '../../../utils/paginationHelper';
 import prisma from '../../../utils/prisma';
-import calculatePagination from '../../../utils/src/helpars/paginationHelper';
 import { IPaginationOptions } from '../../types/pagination';
 import { doctorSearchableFields } from './doctor.constant';
 type SpecialtyData = {

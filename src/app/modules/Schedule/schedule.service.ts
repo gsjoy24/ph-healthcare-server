@@ -1,7 +1,7 @@
 import { DoctorSchedules, Prisma, Schedule, User } from '@prisma/client';
 import { addHours, addMinutes, format } from 'date-fns';
+import calculatePagination from '../../../utils/paginationHelper';
 import prisma from '../../../utils/prisma';
-import calculatePagination from '../../../utils/src/helpars/paginationHelper';
 import { IPaginationOptions } from '../../types/pagination';
 import { TSchedule } from './schedule.types';
 

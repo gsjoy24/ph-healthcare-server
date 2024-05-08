@@ -1,6 +1,7 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
+import cron from 'node-cron';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import notFound from './app/middlewares/notFound';
 import AppointmentServices from './app/modules/Appointment/appointment.service';
@@ -13,7 +14,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-AppointmentServices.cancelUnpaidAppointments();
+cron.schedule('* * * * *', () => {
+	try {
+		AppointmentServices.cancelUnpaidAppointments();
+	} catch (error) {
+		console.error('Error in cancelling unpaid appointments:', error);
+	}
+});
+
 app.get('/', (req: Request, res: Response) => {
 	res.send({
 		status: 'success',

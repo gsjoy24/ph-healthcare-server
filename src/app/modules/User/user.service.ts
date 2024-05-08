@@ -2,7 +2,7 @@ import { Prisma, PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { Request } from 'express';
 import fileUploader from '../../../utils/fileUploader';
-import calculatePagination from '../../../utils/src/helpars/paginationHelper';
+import calculatePagination from '../../../utils/paginationHelper';
 import config from '../../config';
 import { IPaginationOptions } from '../../types/pagination';
 import { userSearchableFields } from './user.constant';

@@ -1,4 +1,4 @@
-import { IPaginationOptions } from '../../../app/types/pagination';
+import { IPaginationOptions } from '../app/types/pagination';
 
 type IOptionsResult = {
 	page: number;
