@@ -1,10 +1,10 @@
 import { Admin, Prisma, PrismaClient, UserStatus } from '@prisma/client';
 import prisma from '../../../utils/prisma';
-import { IPaginationOptions } from '../../types/pagination';
+import { TPaginationOptions } from '../../types/pagination';
 import { adminSearchableFields } from './admin.constant';
 import { IAdminFilterRequest } from './admin.types';
 
-const getAllAdmins = async (params: IAdminFilterRequest, options: IPaginationOptions) => {
+const getAllAdmins = async (params: IAdminFilterRequest, options: TPaginationOptions) => {
 	const { searchTerm, ...restFilterData } = params;
 	const limit = options.limit ? Number(options.limit) : 10;
 	const page = options.page ? (Number(options.page) - 1) * limit : 0;

@@ -1,10 +1,10 @@
 import { MedicalReport, Patient, PatientHealthData, Prisma, UserStatus } from '@prisma/client';
 import calculatePagination from '../../../utils/paginationHelper';
 import prisma from '../../../utils/prisma';
-import { IPaginationOptions } from '../../types/pagination';
+import { TPaginationOptions } from '../../types/pagination';
 import { patientSearchableFields } from './patient.constant';
 
-const getAllPatients = async (params: any, options: IPaginationOptions) => {
+const getAllPatients = async (params: any, options: TPaginationOptions) => {
 	const { searchTerm, ...restFilterData } = params;
 
 	const { limit, page, skip, sortBy, sortOrder } = calculatePagination(options);

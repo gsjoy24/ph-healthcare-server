@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import calculatePagination from '../../../utils/paginationHelper';
 import prisma from '../../../utils/prisma';
 import apiError from '../../errors/apiError';
-import { IPaginationOptions } from '../../types/pagination';
+import { TPaginationOptions } from '../../types/pagination';
 
 const createAppointment = async (payload: Appointment, user: JwtPayload) => {
 	const patient = await prisma.patient.findUnique({ where: { email: user.email } });
@@ -62,7 +62,7 @@ const createAppointment = async (payload: Appointment, user: JwtPayload) => {
 	return result;
 };
 
-const getMyAppointment = async (user: JwtPayload, filters: any, options: IPaginationOptions) => {
+const getMyAppointment = async (user: JwtPayload, filters: any, options: TPaginationOptions) => {
 	const { limit, page, skip, sortBy, sortOrder } = calculatePagination(options);
 	const conditions: Prisma.AppointmentWhereInput[] = [];
 

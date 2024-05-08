@@ -2,7 +2,7 @@ import { DoctorSchedules, Prisma, Schedule, User } from '@prisma/client';
 import { addHours, addMinutes, format } from 'date-fns';
 import calculatePagination from '../../../utils/paginationHelper';
 import prisma from '../../../utils/prisma';
-import { IPaginationOptions } from '../../types/pagination';
+import { TPaginationOptions } from '../../types/pagination';
 import { TSchedule } from './schedule.types';
 
 const createSchedule = async (payload: TSchedule): Promise<Schedule[]> => {
@@ -56,7 +56,7 @@ const createSchedule = async (payload: TSchedule): Promise<Schedule[]> => {
 	return schedules;
 };
 
-const getAllFromDb = async (params: any, options: IPaginationOptions, user: User) => {
+const getAllFromDb = async (params: any, options: TPaginationOptions, user: User) => {
 	const { startDate, endDate, ...restFilterData } = params;
 
 	const { limit, page, skip, sortOrder } = calculatePagination(options);

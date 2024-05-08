@@ -6,6 +6,7 @@ import PrescriptionControllers from './prescription.controller';
 const router = express.Router();
 
 router.post('/', auth(UserRole.DOCTOR), PrescriptionControllers.createPrescription);
+router.get('/my-prescriptions', auth(UserRole.DOCTOR, UserRole.PATIENT), PrescriptionControllers.patientPrescriptions);
 
 const PrescriptionRoutes = router;
 

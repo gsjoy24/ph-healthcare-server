@@ -4,7 +4,7 @@ import { Request } from 'express';
 import fileUploader from '../../../utils/fileUploader';
 import calculatePagination from '../../../utils/paginationHelper';
 import config from '../../config';
-import { IPaginationOptions } from '../../types/pagination';
+import { TPaginationOptions } from '../../types/pagination';
 import { userSearchableFields } from './user.constant';
 const prisma = new PrismaClient();
 
@@ -72,7 +72,7 @@ const createPatient = async (payload: Request) => {
 	return result;
 };
 
-const getAllUsers = async (params: any, options: IPaginationOptions) => {
+const getAllUsers = async (params: any, options: TPaginationOptions) => {
 	const { searchTerm, ...restFilterData } = params;
 	const { limit, page, skip, sortBy, sortOrder } = calculatePagination(options);
 

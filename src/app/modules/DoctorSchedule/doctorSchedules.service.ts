@@ -2,7 +2,7 @@ import { Doctor, DoctorSchedules, Prisma, User } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../../../utils/prisma';
 import apiError from '../../errors/apiError';
-import { IPaginationOptions } from '../../types/pagination';
+import { TPaginationOptions } from '../../types/pagination';
 
 const createDoctorSchedule = async (doctorEmail: string, payload: { schedules: string[] }) => {
 	const doctorData = (await prisma.doctor.findUnique({ where: { email: doctorEmail } })) as Doctor;
@@ -15,7 +15,7 @@ const createDoctorSchedule = async (doctorEmail: string, payload: { schedules: s
 	return result;
 };
 
-const getMySchedules = async (params: any, options: IPaginationOptions, user: User) => {
+const getMySchedules = async (params: any, options: TPaginationOptions, user: User) => {
 	const { startDate, endDate, ...restFilterData } = params;
 
 	const limit = options.limit ? Number(options.limit) : 10;

@@ -1,14 +1,14 @@
 import { Doctor, Prisma, UserStatus } from '@prisma/client';
 import calculatePagination from '../../../utils/paginationHelper';
 import prisma from '../../../utils/prisma';
-import { IPaginationOptions } from '../../types/pagination';
+import { TPaginationOptions } from '../../types/pagination';
 import { doctorSearchableFields } from './doctor.constant';
 type SpecialtyData = {
 	specialtyId: string;
 	isDeleted: boolean;
 };
 
-const getAllDoctors = async (params: any, options: IPaginationOptions) => {
+const getAllDoctors = async (params: any, options: TPaginationOptions) => {
 	const { searchTerm, specialties, ...restFilterData } = params;
 
 	const { limit, page, skip, sortBy, sortOrder } = calculatePagination(options);
