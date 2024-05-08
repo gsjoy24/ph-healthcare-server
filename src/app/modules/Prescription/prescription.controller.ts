@@ -17,6 +17,7 @@ const createPrescription = catchAsync(async (req: Request, res: Response) => {
 });
 
 const patientPrescriptions = catchAsync(async (req: Request, res: Response) => {
+   
 	const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 	const result = await PrescriptionServices.patientPrescriptions(req.user as JwtPayload, options);
 	sendResponse(res, {
