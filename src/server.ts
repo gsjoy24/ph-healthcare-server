@@ -25,9 +25,9 @@ const createSuperAdmin = async (payload: any) => {
 	const user = await prisma.user.findUnique({ where: { email: payload?.admin?.email } });
 
 	if (!user) {
-		const result = await prisma.$transaction(async (tx) => {
-			const user = await tx.user.create({ data: userData });
-			const admin = await tx.admin.create({ data: payload?.admin });
+		await prisma.$transaction(async (tx) => {
+			await tx.user.create({ data: userData });
+			await tx.admin.create({ data: payload?.admin });
 		});
 	}
 
