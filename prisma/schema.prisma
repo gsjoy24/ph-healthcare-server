@@ -41,17 +41,18 @@ model Admin {
 model Doctor {
   id                 String   @id @default(uuid())
   name               String
+  gender             Gender
   email              String   @unique
   phone              String
   profilePhoto       String?
   address            String?
   registrationNumber String
   experience         Int      @default(0)
-  gender             Gender
   appointmentFee     Int
   qualifications     String
   currentWorkplace   String
   designation        String
+  avgRating          Float    @default(0.0)
   isDeleted          Boolean  @default(false)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
