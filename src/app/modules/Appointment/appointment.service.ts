@@ -147,10 +147,13 @@ const changeAppointmentStatus = async (appointmentId: string, status: Appointmen
 	return result;
 };
 
+const cancelUnpaidAppointments = async () => {};
+
 const AppointmentServices = {
 	createAppointment,
 	getMyAppointment,
-	changeAppointmentStatus
+	changeAppointmentStatus,
+	cancelUnpaidAppointments
 };
 
 export default AppointmentServices;
