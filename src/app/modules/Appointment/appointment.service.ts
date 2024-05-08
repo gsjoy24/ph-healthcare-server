@@ -1,4 +1,4 @@
-import { Appointment, Prisma, UserRole } from '@prisma/client';
+import { Appointment, AppointmentStatus, Prisma, UserRole } from '@prisma/client';
 import { JwtPayload } from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import prisma from '../../../utils/prisma';
@@ -123,9 +123,14 @@ const getMyAppointment = async (user: JwtPayload, filters: any, options: IPagina
 	};
 };
 
+const changeAppointmentStatus = async (appointmentId: string, status: AppointmentStatus) => {
+	console.log({ appointmentId, status });
+};
+
 const AppointmentServices = {
 	createAppointment,
-	getMyAppointment
+	getMyAppointment,
+	changeAppointmentStatus
 };
 
 export default AppointmentServices;
