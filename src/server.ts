@@ -16,20 +16,21 @@ const superAdminInfo = {
 };
 
 const createSuperAdmin = async (payload: any) => {
+	// Check if super admin already exists
+	const user = await prisma.user.findUnique({ where: { email: payload?.admin?.email } });
+	if (user) return;
+
 	const hashedPassword = await bcrypt.hash(payload?.password, config?.pass_salt);
 	const userData = {
 		email: payload?.admin?.email,
 		password: hashedPassword,
 		role: UserRole.SUPER_ADMIN
 	};
-	const user = await prisma.user.findUnique({ where: { email: payload?.admin?.email } });
 
-	if (!user) {
-		await prisma.$transaction(async (tx) => {
-			await tx.user.create({ data: userData });
-			await tx.admin.create({ data: payload?.admin });
-		});
-	}
+	await prisma.$transaction(async (tx) => {
+		await tx.user.create({ data: userData });
+		await tx.admin.create({ data: payload?.admin });
+	});
 
 	return;
 };
