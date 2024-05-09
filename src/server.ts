@@ -40,5 +40,15 @@ async function main() {
 		console.log(`Server is running on http://localhost:${config.port}`);
 	});
 	createSuperAdmin(superAdminInfo);
+
+	process.on('uncaughtException', (err) => {
+		if (server) server.close(() => console.log('Server closed!'));
+		process.exit(1);
+	});
+
+	process.on('unhandledRejection', () => {
+		if (server) server.close(() => console.log('Server closed!'));
+		process.exit(1);
+	});
 }
 main();
