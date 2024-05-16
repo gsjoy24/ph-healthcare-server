@@ -6,7 +6,7 @@ import DoctorControllers from './doctor.controller';
 
 const router = express.Router();
 
-router.get('/', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), DoctorControllers.getAllDoctors);
+router.get('/', DoctorControllers.getAllDoctors);
 router.get('/:id', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), DoctorControllers.getAdminById);
 router.patch(
 	'/:id',

@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 
 const notFound = (req: Request, res: Response) => {
 	res.status(httpStatus.NOT_FOUND).json({
-		status: false,
+		success: false,
 		message: 'API not found!',
 		error: {
 			path: req.originalUrl,

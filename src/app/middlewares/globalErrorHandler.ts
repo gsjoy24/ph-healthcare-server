@@ -11,7 +11,7 @@ const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFun
 	}
 
 	res.status(err?.statusCode || 500).json({
-		status: false,
+		success: false,
 		message,
 		error: err
 	});
