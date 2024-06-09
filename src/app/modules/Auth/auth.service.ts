@@ -68,10 +68,11 @@ const changePassword = async (user: any, payload: any) => {
 			status: UserStatus.ACTIVE
 		}
 	});
+
 	const isPasswordValid = await bcrypt.compare(payload.oldPassword, userData.password);
 
 	if (!isPasswordValid) {
-		throw new apiError(httpStatus.UNAUTHORIZED, 'Invalid email or password');
+		throw new apiError(httpStatus.UNAUTHORIZED, 'Invalid old password');
 	}
 
 	const hashedPassword = await bcrypt.hash(payload.newPassword, Number(config.pass_salt));
