@@ -7,7 +7,7 @@ import DoctorControllers from './doctor.controller';
 const router = express.Router();
 
 router.get('/', DoctorControllers.getAllDoctors);
-router.get('/:id', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), DoctorControllers.getAdminById);
+router.get('/:id', DoctorControllers.getAdminById);
 router.patch(
 	'/:id',
 	auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
@@ -15,5 +15,7 @@ router.patch(
 	DoctorControllers.updateDoctor
 );
 router.delete('/:id', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), DoctorControllers.deleteFromDB);
+
+router.delete('/soft-delete/:id', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), DoctorControllers.softDeleteFromDB);
 
 export const DoctorRoutes = router;
