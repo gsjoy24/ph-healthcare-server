@@ -7,9 +7,9 @@ const router = express.Router();
 
 router.post('/', auth(UserRole.ADMIN, UserRole.SUPER_ADMIN), ScheduleControllers.createSchedule);
 
-router.get('/', auth(UserRole.DOCTOR), ScheduleControllers.getAllFromDb);
+router.get('/', auth(UserRole.DOCTOR, UserRole.ADMIN, UserRole.SUPER_ADMIN), ScheduleControllers.getAllFromDb);
 
-router.get('/:id', auth(UserRole.DOCTOR), ScheduleControllers.getById);
+router.get('/:id', auth(UserRole.DOCTOR, UserRole.ADMIN, UserRole.SUPER_ADMIN), ScheduleControllers.getById);
 
 router.delete('/:id', auth(UserRole.ADMIN, UserRole.SUPER_ADMIN), ScheduleControllers.deleteById);
 

@@ -55,7 +55,7 @@ const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
 
 const softDeleteFromDB = catchAsync(async (req: Request, res: Response) => {
 	const { id } = req.params;
-	await DoctorServices.deleteFromDB(id);
+	await DoctorServices.softDeleteFromDB(id);
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
