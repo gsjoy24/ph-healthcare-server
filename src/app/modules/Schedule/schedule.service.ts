@@ -59,7 +59,7 @@ const createSchedule = async (payload: TSchedule): Promise<Schedule[]> => {
 const getAllFromDb = async (params: any, options: TPaginationOptions, user: User) => {
 	const { startDate, endDate, ...restFilterData } = params;
 
-	const { limit, page, skip, sortOrder } = calculatePagination(options);
+	const { limit, page, skip } = calculatePagination(options);
 	const sortBy = options.sortBy || 'startDateTime';
 
 	const conditions: Prisma.ScheduleWhereInput[] = [];
@@ -111,7 +111,7 @@ const getAllFromDb = async (params: any, options: TPaginationOptions, user: User
 		skip,
 		take: limit,
 		orderBy: {
-			[sortBy]: sortOrder
+			[sortBy]: 'asc'
 		}
 	});
 

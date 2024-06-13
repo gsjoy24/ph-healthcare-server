@@ -53,7 +53,7 @@ router.get(
 );
 
 router.patch(
-	'/update-my-profile',
+	'/me',
 	auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
 	fileUploader.upload.single('file'),
 	(req: Request, res: Response, next: NextFunction) => {

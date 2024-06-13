@@ -7,9 +7,8 @@ const verifyToken = (token: string, secret: Secret) => {
 	try {
 		decodedData = jwt.verify(token, secret) as JwtPayload;
 	} catch (error) {
-		throw new apiError(httpStatus.UNAUTHORIZED, 'Jwt token is expired or invalid!');
+		throw new apiError(498, 'Jwt token is expired or invalid!');
 	}
-
 	return decodedData;
 };
 
