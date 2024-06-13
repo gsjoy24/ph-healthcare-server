@@ -1,9 +1,11 @@
 import { Prisma, PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { Request } from 'express';
+import httpStatus from 'http-status';
 import fileUploader from '../../../utils/fileUploader';
 import calculatePagination from '../../../utils/paginationHelper';
 import config from '../../config';
+import apiError from '../../errors/apiError';
 import { TPaginationOptions } from '../../types/pagination';
 import { userSearchableFields } from './user.constant';
 const prisma = new PrismaClient();
@@ -200,12 +202,16 @@ const getMyProfile = async (email: string) => {
 };
 
 const updateProfile = async (email: string, payload: Request) => {
-	const user = await prisma.user.findUniqueOrThrow({
+	const user = await prisma.user.findUnique({
 		where: {
 			email,
 			status: UserStatus.ACTIVE
 		}
 	});
+
+	if (!user) {
+		throw new apiError(httpStatus.NOT_FOUND, 'User not found!');
+	}
 
 	const file = payload?.file;
 	if (file) {
@@ -250,6 +256,7 @@ const updateProfile = async (email: string, payload: Request) => {
 		default:
 			break;
 	}
+
 	return userProfile;
 };
 
