@@ -57,7 +57,6 @@ router.patch(
 	auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
 	fileUploader.upload.single('file'),
 	(req: Request, res: Response, next: NextFunction) => {
-		console.log(req.body.data);
 		req.body = JSON.parse(req.body.data);
 		return userControllers.updateProfile(req, res, next);
 	}
