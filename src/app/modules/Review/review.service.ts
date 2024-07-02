@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import prisma from '../../../utils/prisma';
-import apiError from '../../errors/apiError';
+import ApiError from '../../errors/ApiError';
 
 const insertReview = async (payload: any, user: JwtPayload) => {
 	const patientData = await prisma.patient.findUniqueOrThrow({
@@ -17,7 +17,7 @@ const insertReview = async (payload: any, user: JwtPayload) => {
 	});
 
 	if (appointmentData.patientId !== patientData.id) {
-		throw new apiError(httpStatus.BAD_REQUEST, 'You are not authorized to perform this action');
+		throw new ApiError(httpStatus.BAD_REQUEST, 'You are not authorized to perform this action');
 	}
 
 	const result = await prisma.$transaction(async (tx) => {

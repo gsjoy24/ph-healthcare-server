@@ -5,7 +5,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import prisma from '../../utils/prisma';
 import verifyToken from '../../utils/verifyToken';
 import config from '../config';
-import apiError from '../errors/apiError';
+import ApiError from '../errors/ApiError';
 
 const auth =
 	(...roles: string[]) =>
@@ -14,7 +14,7 @@ const auth =
 			const token = req.headers.authorization;
 
 			if (!token) {
-				throw new apiError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
+				throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
 			}
 
 			const verifiedUser = verifyToken(token, config.accessSecret as string);
@@ -26,11 +26,11 @@ const auth =
 			} else if (verifiedUser.role === UserRole.PATIENT) {
 				await prisma.patient.findUniqueOrThrow({ where: { email: verifiedUser.email } });
 			} else {
-				throw new apiError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
+				throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
 			}
 
 			if (roles.length && !roles.includes(verifiedUser.role)) {
-				throw new apiError(httpStatus.FORBIDDEN, 'You are not authorized!');
+				throw new ApiError(httpStatus.FORBIDDEN, 'You are not authorized!');
 			}
 			req.user = verifiedUser as JwtPayload;
 			next();

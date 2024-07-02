@@ -1,7 +1,7 @@
 import axios from 'axios';
 import httpStatus from 'http-status';
 import config from '../../config';
-import apiError from '../../errors/apiError';
+import ApiError from '../../errors/ApiError';
 
 const initPayment = async (paymentInitData: any) => {
 	try {
@@ -50,7 +50,7 @@ const initPayment = async (paymentInitData: any) => {
 
 		return response.data;
 	} catch (error) {
-		throw new apiError(httpStatus.BAD_GATEWAY, 'Payment initiation failed!');
+		throw new ApiError(httpStatus.BAD_GATEWAY, 'Payment initiation failed!');
 	}
 };
 
@@ -63,7 +63,7 @@ const validatePayment = async (payload: any) => {
 
 		return response.data;
 	} catch (error) {
-		throw new apiError(httpStatus.BAD_GATEWAY, 'Payment initiation failed!');
+		throw new ApiError(httpStatus.BAD_GATEWAY, 'Payment initiation failed!');
 	}
 };
 

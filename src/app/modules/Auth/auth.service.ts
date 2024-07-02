@@ -6,7 +6,7 @@ import emailSender from '../../../utils/emailSender';
 import prisma from '../../../utils/prisma';
 import verifyToken from '../../../utils/verifyToken';
 import config from '../../config';
-import apiError from '../../errors/apiError';
+import ApiError from '../../errors/ApiError';
 
 const loginUser = async (email: string, password: string) => {
 	const userData = await prisma.user.findUniqueOrThrow({
@@ -72,7 +72,7 @@ const changePassword = async (user: any, payload: any) => {
 	const isPasswordValid = await bcrypt.compare(payload.oldPassword, userData.password);
 
 	if (!isPasswordValid) {
-		throw new apiError(httpStatus.UNAUTHORIZED, 'Invalid old password');
+		throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid old password');
 	}
 
 	const hashedPassword = await bcrypt.hash(payload.newPassword, Number(config.pass_salt));
@@ -183,7 +183,7 @@ const resetPassword = async (id: string, token: string, password: string) => {
 	const verifiedData = verifyToken(token, config.reset_pass_secret as string);
 
 	if (verifiedData?.id !== id) {
-		throw new apiError(httpStatus.UNAUTHORIZED, 'Invalid token');
+		throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid token');
 	}
 	const userData = await prisma.user.findUniqueOrThrow({
 		where: {

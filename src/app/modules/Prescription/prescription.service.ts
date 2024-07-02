@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import calculatePagination from '../../../utils/paginationHelper';
 import prisma from '../../../utils/prisma';
-import apiError from '../../errors/apiError';
+import ApiError from '../../errors/ApiError';
 import { TPaginationOptions } from '../../types/pagination';
 
 const createPrescription = async (payload: Prescription, user: JwtPayload) => {
@@ -19,7 +19,7 @@ const createPrescription = async (payload: Prescription, user: JwtPayload) => {
 	});
 
 	if (appointmentData.doctor.email !== user.email) {
-		throw new apiError(httpStatus.UNAUTHORIZED, 'You are not authorized to create a prescription for this appointment');
+		throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized to create a prescription for this appointment');
 	}
 
 	const result = await prisma.prescription.create({

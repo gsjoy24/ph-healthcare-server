@@ -2,7 +2,7 @@ import { PaymentStatus } from '@prisma/client';
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import prisma from '../../../utils/prisma';
-import apiError from '../../errors/apiError';
+import ApiError from '../../errors/ApiError';
 
 const getDashboardMetaData = async (user: JwtPayload) => {
 	switch (user.role) {

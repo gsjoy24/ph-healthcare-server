@@ -5,7 +5,7 @@ import httpStatus from 'http-status';
 import fileUploader from '../../../utils/fileUploader';
 import calculatePagination from '../../../utils/paginationHelper';
 import config from '../../config';
-import apiError from '../../errors/apiError';
+import ApiError from '../../errors/ApiError';
 import { TPaginationOptions } from '../../types/pagination';
 import { userSearchableFields } from './user.constant';
 const prisma = new PrismaClient();
@@ -210,7 +210,7 @@ const updateProfile = async (email: string, payload: Request) => {
 	});
 
 	if (!user) {
-		throw new apiError(httpStatus.NOT_FOUND, 'User not found!');
+		throw new ApiError(httpStatus.NOT_FOUND, 'User not found!');
 	}
 
 	const file = payload?.file;
