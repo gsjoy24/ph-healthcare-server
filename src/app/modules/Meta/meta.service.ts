@@ -14,8 +14,6 @@ const getDashboardMetaData = async (user: JwtPayload) => {
 			return await getDoctorMetaData(user.email);
 		case 'PATIENT':
 			return await getPatientMetaData(user.email);
-		default:
-			new apiError(httpStatus.BAD_REQUEST, 'Invalid user role');
 	}
 };
 
