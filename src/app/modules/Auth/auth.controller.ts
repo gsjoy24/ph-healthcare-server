@@ -28,12 +28,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
 	const OldRefreshToken = req.cookies.refreshToken;
-	const { accessToken, needPasswordChange, refreshToken } = await AuthServices.refreshToken(OldRefreshToken);
-
-	// res.cookie('refreshToken', refreshToken, {
-	// 	httpOnly: true,
-	// 	secure: false
-	// });
+	const { accessToken, needPasswordChange } = await AuthServices.refreshToken(OldRefreshToken);
 
 	sendResponse(res, {
 		statusCode: httpStatus.OK,

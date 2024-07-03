@@ -1,4 +1,4 @@
-import { Admin, Prisma, PrismaClient, UserStatus } from '@prisma/client';
+import { Admin, Prisma, UserStatus } from '@prisma/client';
 import prisma from '../../../utils/prisma';
 import { TPaginationOptions } from '../../types/pagination';
 import { adminSearchableFields } from './admin.constant';
@@ -106,7 +106,7 @@ const deleteFromDB = async (id: string) => {
 			}
 		});
 
-		const deletedUser = await tx.user.update({
+		await tx.user.update({
 			where: {
 				email: deletedAdmin.email
 			},

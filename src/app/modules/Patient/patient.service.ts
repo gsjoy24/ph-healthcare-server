@@ -188,7 +188,7 @@ const softDeleteFromDB = async (id: string) => {
 			}
 		});
 
-		const deletedUser = await tx.user.update({
+		await tx.user.update({
 			where: {
 				email: deletedPatient.email
 			},

@@ -2,6 +2,7 @@ import { UserRole } from '@prisma/client';
 import express from 'express';
 import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
+import adminValidations from '../Admin/admin.validations';
 import DoctorControllers from './doctor.controller';
 
 const router = express.Router();
@@ -11,7 +12,7 @@ router.get('/:id', DoctorControllers.getAdminById);
 router.patch(
 	'/:id',
 	auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
-	// validateRequest(adminValidations.updateAdminSchema),
+	validateRequest(adminValidations.updateAdminSchema),
 	DoctorControllers.updateDoctor
 );
 router.delete('/:id', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), DoctorControllers.deleteFromDB);

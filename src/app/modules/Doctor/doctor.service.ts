@@ -169,7 +169,7 @@ const deleteFromDB = async (id: string) => {
 			}
 		});
 
-		const deletedUser = await tx.user.delete({
+		await tx.user.delete({
 			where: {
 				email: deletedDoctor.email
 			}
@@ -198,7 +198,7 @@ const softDeleteFromDB = async (id: string) => {
 			}
 		});
 
-		const deletedUser = await tx.user.update({
+		await tx.user.update({
 			where: {
 				email: deletedDoctor.email
 			},

@@ -51,11 +51,9 @@ const refreshToken = async (token: string) => {
 		role: isUserExists.role
 	};
 	const accessToken = createToken(jwtData, config.accessSecret as string, config.accessSecretExp as string);
-	const refreshToken = createToken(jwtData, config.refreshSecret as string, config.refreshSecretExp as string);
 
 	return {
 		accessToken,
-		refreshToken,
 		needPasswordChange: isUserExists.needPasswordChange
 	};
 };

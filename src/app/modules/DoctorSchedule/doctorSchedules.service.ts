@@ -1,4 +1,4 @@
-import { Doctor, DoctorSchedules, Prisma, User } from '@prisma/client';
+import { Doctor, Prisma, User } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../../../utils/prisma';
 import ApiError from '../../errors/ApiError';
